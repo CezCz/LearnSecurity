@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Linux, Security, Cryptography</title>
+    <script src="{% static 'requirejs/require.js' %}"></script>
+    <link href="{% static 'bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'app/css/override.css' %}" rel="stylesheet">
+    <link href="{% static 'components-font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+
+    <script>
+        requirejs.config({
+            baseUrl: "{% static '' %}",
+            paths: {
+                "jquery": './jquery/dist/jquery',
+                "tetherhack": './app/js/tetherhack',
+                "secApp": './app/js/secapp',
+                "bootstrap": './bootstrap/dist/js/bootstrap'
+            },
+            shim: {
+                "jquery": {
+                    exports: '$'
+                },
+                "bootstrap": {
+                    deps: ["jquery", "tetherhack"]
+                }
+            }
+        });
+    </script>
+    <style>
+
+
+    </style>
+
+
+</head>
+<body>
+
+<div id="wrapper">
+    <div class="sidePanel card">
+        <div class="card-block">
+            <h4 class="card-title">Learn Security</h4>
+            <h6 class="card-subtitle text-muted">Linux, Crypto and web security platform</h6>
+        </div>
+        <img class="card-img-top img-fluid" src="{% static 'images/cat.jpg' %}" alt="Card image cap">
+        <div class="card-block">
+            <h4 class="card-title">Card title</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                card's
+                content.</p>
+        </div>
+
+        <div id="accordion" role="tablist" aria-multiselectable="true">
+            <ul class="list-group list-group-flush">
+                <li class="panel list-group-item">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false"
+                       aria-controls="collapseOne">
+                        Login
+                    </a>
+                    <div id="collapseOne" class="collapse" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                        squid.
+                        3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                        laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                        coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
+                    </div>
+                </li>
+                <li class="panel list-group-item">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
+                       aria-expanded="false" aria-controls="collapseTwo">
+                        Maze
+                    </a>
+                    <div id="collapseTwo" class="collapse" role="tabpanel"
+                         aria-labelledby="headingTwo">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                        squid.
+                        3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                        laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                        coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
+                    </div>
+                </li>
+                <li class="panel list-group-item">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"
+                       aria-expanded="false" aria-controls="collapseThree">
+                        About
+                    </a>
+                    <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                        squid.
+                        3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                        laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                        coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sandBox">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        requirejs(['jquery', 'secApp', 'tetherhack', 'bootstrap'],
+                function ($, secApp) {
+                    console.log("he");
+                });
+    </script>
+</body>
+</html>

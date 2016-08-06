@@ -1,0 +1,8 @@
+.idea
+manage.py
+components
+static
+!static/app
+!static/images
+__*
+*.pyc
