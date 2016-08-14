@@ -127,6 +127,9 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
+# TODO
+# FIXTURE_DIRS = ""
+
 BOWER_COMPONENTS_ROOT = 'C:\\Users\\Cezary\\PycharmProjects\\LearnSecurityApp\\components\\'
 STATIC_ROOT = 'C:\\Users\\Cezary\\PycharmProjects\\LearnSecurityApp\\LearnSecurity\\static'
 
@@ -135,5 +138,6 @@ BOWER_INSTALLED_APPS = (
     'bootstrap#v4.0.0-alpha.3',
     'animate.css',
     'components-font-awesome',
-    'requirejs'
+    'requirejs',
+    'navigo'
 )

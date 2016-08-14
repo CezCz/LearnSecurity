@@ -16,7 +16,8 @@
                 "jquery": './jquery/dist/jquery',
                 "tetherhack": './app/js/tetherhack',
                 "secApp": './app/js/secapp',
-                "bootstrap": './bootstrap/dist/js/bootstrap'
+                "bootstrap": './bootstrap/dist/js/bootstrap',
+                "navigo": './navigo/lib/navigoMod'
             },
             shim: {
                 "jquery": {
@@ -28,12 +29,6 @@
             }
         });
     </script>
-    <style>
-
-
-    </style>
-
-
 </head>
 <body>
 
@@ -43,7 +38,8 @@
             <h4 class="card-title">Learn Security</h4>
             <h6 class="card-subtitle text-muted">Linux, Crypto and web security platform</h6>
         </div>
-        <img class="card-img-top img-fluid" src="{% static 'images/cat.jpg' %}" alt="Card image cap">
+        <img class="img-fluid img-circle" src="{% static 'images/cat.jpg' %}" alt="Card image cap"
+             style="width:70%; margin:auto;">
         <div class="card-block">
             <h4 class="card-title">Card title</h4>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
@@ -53,11 +49,13 @@
 
         <div id="accordion" role="tablist" aria-multiselectable="true">
             <ul class="list-group list-group-flush">
-                <li class="panel list-group-item">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false"
-                       aria-controls="collapseOne">
+                <li class="panel list-group-item mazeItem" data-toggle="collapse" data-parent="#accordion"
+                    href="#collapseOne"
+                    aria-expanded="false"
+                    aria-controls="collapseOne">
+                    <h6>
                         Login
-                    </a>
+                    </h6>
                     <div id="collapseOne" class="collapse" role="tabpanel"
                          aria-labelledby="headingOne">
                         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
@@ -67,25 +65,39 @@
                         coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
                     </div>
                 </li>
-                <li class="panel list-group-item">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
-                       aria-expanded="false" aria-controls="collapseTwo">
+                <li class="panel list-group-item mazeItem" id="mazeTab" data-toggle="collapse" data-parent="#accordion"
+                    href="#collapseTwo"
+                    aria-expanded="false" aria-controls="collapseTwo">
+                    <h6>
                         Maze
-                    </a>
+                    </h6>
                     <div id="collapseTwo" class="collapse" role="tabpanel"
                          aria-labelledby="headingTwo">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                        squid.
-                        3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                        laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
-                        coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
+                        <ul class="list-group">
+                            <li class="list-group-item mazeItem" id="mazeInfoLinux">Cras justo
+                                odio
+                            </li>
+                            <li class="list-group-item mazeItem">Dapibus ac
+                                facilisis in
+                            </li>
+                            <li class="list-group-item mazeItem">Morbi leo
+                                risus
+                            </li>
+                            <li class="list-group-item mazeItem">Porta ac
+                                consectetur ac
+                            </li>
+                            <li class="list-group-item mazeItem">Vestibulum at
+                                eros
+                            </li>
+                        </ul>
                     </div>
                 </li>
-                <li class="panel list-group-item">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"
-                       aria-expanded="false" aria-controls="collapseThree">
+                <li class="panel list-group-item mazeItem" data-toggle="collapse" data-parent="#accordion"
+                    href="#collapseThree"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h6>
                         About
-                    </a>
+                    </h6>
                     <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
                         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
                         squid.
@@ -96,24 +108,46 @@
                 </li>
             </ul>
         </div>
+    </div>
+    <div class="mazeLevels card" id="mazeDesc" style="display:none;">
+        <div class="card-block">
+            <h4 class="card-title">Maze name</h4>
+            <h6 class="card-subtitle text-muted">Short Desc</h6>
+        </div>
+    </div>
 
-        <div class="sandBox">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
+    <div class="sandBox">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
 
 
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        requirejs(['jquery', 'secApp', 'tetherhack', 'bootstrap'],
-                function ($, secApp) {
-                    console.log("he");
+<script>
+    requirejs(['jquery', 'secApp', "navigo", 'bootstrap'],
+            function ($, secApp, navigo) {
+
+                var router = new navigo(null, false);
+                router
+                        .on('/test', function () {
+                            console.log('test');
+                        })
+                        .resolve();
+
+
+                $("[id^=collapse]").on("click", function (e) {
+                    e.stopPropagation();
                 });
-    </script>
+
+                $("[id^=mazeInfo]").on("click", function (e) {
+                    $("#mazeDesc").slideToggle();
+                })
+            });
+</script>
 </body>
 </html>
