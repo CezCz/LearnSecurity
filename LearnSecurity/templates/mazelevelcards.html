@@ -1,0 +1,18 @@
+{% load utilTags %}
+
+<div class="card-block">
+    <h4 class="card-title">{{ maze.name }}</h4>
+    <h6 class="card-subtitle text-muted">{{ maze.desc }}</h6>
+
+</div>
+<div class="card-block">
+    <ul class="list-group list-group-flush">
+        {% for level in levels %}
+            <li class="panel list-group-item mazeItem">
+                <a href="#/Maze/{{ maze.name }}/{{ level.level }}">
+                    Level {{ level.level }} - {{ level.short_description }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

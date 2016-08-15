@@ -1,0 +1,49 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-9 m-t-1">
+
+            <h1>
+                {{ maze.name }}
+            </h1>
+            <h4 class="text-muted">
+                Level {{ level.level }} - {{ level.short_description }}
+            </h4>
+            <hr/>
+
+            <h3>
+                Description
+            </h3>
+            <p> {{ level.program_description.Program.main }}</p>
+            {% for key, item in level.program_description.Program.sections.items %}
+                <p>
+                    {% for element in item %}
+                        {{ element }} <br/>
+                    {% endfor %}
+                </p>
+            {% endfor %}
+
+            <h3> Usage </h3>
+            {% for key, element in level.program_description.Usage.items %}
+                <div class="row">
+                    <div class="col-lg-3">
+                        <pre class="m-b-0">{{ key }}</pre>
+                    </div>
+                    <div class="col-lg-9">
+                        - {{ element }}
+                    </div>
+                </div>
+            {% endfor %}
+            <h3> Example </h3>
+
+
+
+        </div>
+        <div class="col-lg-3 m-t-1">
+
+            <h1>
+                Mazes
+            </h1>
+
+        </div>
+    </div>
+</div>

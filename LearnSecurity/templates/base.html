@@ -6,8 +6,9 @@
     <title>Linux, Security, Cryptography</title>
     <script src="{% static 'requirejs/require.js' %}"></script>
     <link href="{% static 'bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
-    <link href="{% static 'app/css/override.css' %}" rel="stylesheet">
     <link href="{% static 'components-font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'animate.css/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'app/css/override.css' %}" rel="stylesheet">
 
     <script>
         requirejs.config({
@@ -32,7 +33,7 @@
 </head>
 <body>
 
-<div id="wrapper">
+<div id="wrapper" class="wrapper-pl-20">
     <div class="sidePanel card">
         <div class="card-block">
             <h4 class="card-title">Learn Security</h4>
@@ -60,9 +61,6 @@
                          aria-labelledby="headingOne">
                         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
                         squid.
-                        3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                        laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
-                        coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
                     </div>
                 </li>
                 <li class="panel list-group-item mazeItem" id="mazeTab" data-toggle="collapse" data-parent="#accordion"
@@ -74,21 +72,11 @@
                     <div id="collapseTwo" class="collapse" role="tabpanel"
                          aria-labelledby="headingTwo">
                         <ul class="list-group">
-                            <li class="list-group-item mazeItem" id="mazeInfoLinux">Cras justo
-                                odio
-                            </li>
-                            <li class="list-group-item mazeItem">Dapibus ac
-                                facilisis in
-                            </li>
-                            <li class="list-group-item mazeItem">Morbi leo
-                                risus
-                            </li>
-                            <li class="list-group-item mazeItem">Porta ac
-                                consectetur ac
-                            </li>
-                            <li class="list-group-item mazeItem">Vestibulum at
-                                eros
-                            </li>
+                            {% for maze in mazes %}
+                                <li class="list-group-item mazeItem" id="mazeInfoLinux">
+                                    <a href="#/Maze/{{ maze.name }}">{{ maze.name }}</a>
+                                </li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </li>
@@ -99,32 +87,19 @@
                         About
                     </h6>
                     <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                        squid.
-                        3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
-                        laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
-                        coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
+                        Learn about Linux, Security and web protocols through fun maze-like tutorials!
                     </div>
                 </li>
             </ul>
         </div>
     </div>
+
     <div class="mazeLevels card" id="mazeDesc" style="display:none;">
-        <div class="card-block">
-            <h4 class="card-title">Maze name</h4>
-            <h6 class="card-subtitle text-muted">Short Desc</h6>
-        </div>
+
     </div>
 
-    <div class="sandBox">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
+    <div id="sandBox">
 
-
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -133,20 +108,52 @@
             function ($, secApp, navigo) {
 
                 var router = new navigo(null, false);
+
                 router
-                        .on('/test', function () {
-                            console.log('test');
-                        })
-                        .resolve();
+                        .on({
+                            'Maze/:maze/:id': function (param) {
+                                $.get("/Maze/" + param.maze + "/" + param.id).then(function (data) {
+                                    var mazeSandBox = $("#sandBox");
+                                    mazeSandBox.html(data);
+                                    mazeSandBox.addClass("animated zoomIn");
+                                    mazeSandBox.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                        mazeSandBox.removeClass("animated zoomIn");
+                                    });
+                                })
+                            },
+                            'Maze/:maze': function (param) {
+                                $.get("/Maze/" + param.maze).then(function (data) {
+                                    var mazeDescDiv = $("#mazeDesc");
+                                    mazeDescDiv.html(data);
+                                    showMazeDescChangeWrapperPadding();
+                                    mazeDescDiv.show();
+                                    mazeDescDiv.addClass("animated fadeIn");
+                                    mazeDescDiv.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                        mazeDescDiv.removeClass("animated fadeIn");
+                                    });
+                                })
+                            }
+                        }).resolve();
+
+                function showMazeDescChangeWrapperPadding() {
+                    var mazeDescDiv = $("#wrapper");
+                    mazeDescDiv.addClass("wrapper-pl-40");
+                    mazeDescDiv.removeClass("wrapper-pl-20");
+
+                }
+
+                function hideMazeDescChangeWrapperPadding() {
+                    var mazeDescDiv = $("#wrapper");
+                    mazeDescDiv.addClass("wrapper-pl-20");
+                    mazeDescDiv.removeClass("wrapper-pl-40");
+                    mazeDescDiv.hide();
+                }
 
 
                 $("[id^=collapse]").on("click", function (e) {
                     e.stopPropagation();
                 });
 
-                $("[id^=mazeInfo]").on("click", function (e) {
-                    $("#mazeDesc").slideToggle();
-                })
             });
 </script>
 </body>
