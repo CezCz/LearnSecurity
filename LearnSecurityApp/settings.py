@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'LearnSecurity',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djangobower',
+    'LearnSecurity',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -139,5 +139,6 @@ BOWER_INSTALLED_APPS = (
     'animate.css',
     'components-font-awesome',
     'requirejs',
-    'navigo'
+    'navigo',
+    'typed.js'
 )

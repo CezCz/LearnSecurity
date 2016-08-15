@@ -20,6 +20,8 @@ from django.contrib import admin
 from LearnSecurity import views
 
 urlpatterns = [
-    url(r'^$', views.abc),
+    url(r'^$', views.index),
+    url(r'^Maze/(?P<mazeName>[a-zA-Z0-9]+)$', views.basicLinuxInfoHandler),
+    url(r'^Maze/(?P<mazeName>[a-zA-Z0-9]+)/(?P<level>[0-9][0-9]?)$', views.basicLinuxHandler),
     url(r'^admin/', admin.site.urls),
 ]
