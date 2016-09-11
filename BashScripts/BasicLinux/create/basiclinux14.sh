@@ -1,28 +1,18 @@
 #!/bin/bash
+. $DIR/util.sh
 
-echo "Step 14, cat headtail/A | head -1704 | tail -14 "
-mkdir -p ${homedir}headtail
-touch ${homedir}headtail/A
+echo "Step 14, cat headtail/A | head -1703 | tail -14 "
+sudo mkdir -p ${homedir}headtail
+sudo touch ${homedir}headtail/A
 
 for (( c=1; c<=1689; c++ ))
 do
-   echo `cat /dev/urandom | tr -dc 'a-zA-Z0-9 ' | fold -w $(shuf -i 16-64 -n 1) | head -n 1` >> ${homedir}grep/A
+   echo `cat /dev/urandom | tr -dc 'a-zA-Z0-9 ' | fold -w $(shuf -i 16-64 -n 1) | head -n 1` | sudo tee --append ${homedir}headtail/A > /dev/null
+   printDot c
 done
-printf "B\n
-E\n
-T\n
-A\n
-G\n
-A\n
-M\n
-M\n
-A\n
-D\n
-E\n
-L\n
-T\n
-A\n"
+printf "B\nE\nT\nA\nG\nA\nM\nM\nA\nD\nE\nL\nT\nA\n" |  sudo tee --append ${homedir}headtail/A > /dev/null
 for (( c=1; c<=869; c++ ))
 do
-   echo `cat /dev/urandom | tr -dc 'a-zA-Z0-9 ' | fold -w $(shuf -i 16-64 -n 1) | head -n 1` >> ${homedir}grep/A
+   echo `cat /dev/urandom | tr -dc 'a-zA-Z0-9 ' | fold -w $(shuf -i 16-64 -n 1) | head -n 1` | sudo tee --append ${homedir}headtail/A > /dev/null
+   printDot c
 done

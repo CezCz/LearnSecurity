@@ -10,19 +10,22 @@ fi
 
 if [ "$1" == create ] || [ "$1" == remove ]; then
 
-  #Add user basiclinux
   homedir=/home/basiclinux/
   export homedir
 
-  if ! getent passwd basiclinux
-  then
-    sudo useradd -m -d $homedir -s /bin/bash -p $(perl -e 'print crypt("basiclinux", "salt"),"\n"') basiclinux
-    echo "User basiclinux created"
-  else
-    echo "User basiclinux already created skiping"
+  if [ "$1" == create ]; then
+    #Add user basiclinux
+    if ! getent passwd basiclinux
+    then
+      sudo useradd -m -d $homedir -s /bin/bash -p $(perl -e 'print crypt("basiclinux", "salt"),"\n"') basiclinux
+      echo "User basiclinux created"
+    else
+      echo "User basiclinux already created skiping"
+    fi
   fi
 
   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  export DIR
   all=$(ls -l ${DIR}/$1/basiclinux?*.sh | wc -l)
 
   if [ $2 == all ]; then
