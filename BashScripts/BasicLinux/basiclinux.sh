@@ -30,11 +30,13 @@ if [ "$1" == create ] || [ "$1" == remove ]; then
 
   if [ $2 == all ]; then
     for file in basiclinux`seq 1 $all`.sh; do
-        ${DIR}/$1/$file
+      ${DIR}/$1/$file
+      echo .
     done
 
   elif [ $2 -ge 1 ] && [ $2 -le $all ]; then
     ${DIR}/$1/basiclinux$2.sh
+    echo .
   else
     echo "Second parameter invalid"
   fi

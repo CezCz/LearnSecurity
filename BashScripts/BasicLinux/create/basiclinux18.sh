@@ -1,8 +1,9 @@
 #!/bin/bash
+. $DIR/util.sh
 
 echo "Step 18, uniq filter/A | wc -l"
-mkdir -p ${homedir}filter
-touch ${homedir}filter/A
+sudo mkdir -p ${homedir}filter
+sudo touch ${homedir}filter/A
 
 leet=0
 while [ $leet -lt 1337 ]
@@ -12,8 +13,9 @@ do
   then
     for ((counter=0; counter<$(($RANDOM%10 + 1)); counter++))
     do
-      printf "$line\n" >> ${homedir}filter/A
+      printf "$line\n" | sudo tee --append ${homedir}filter/A > /dev/null
     done
+    printDot $leet
     leet=$[$leet+1]
   fi
 done
