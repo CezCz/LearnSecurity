@@ -21,7 +21,7 @@ from LearnSecurity import views
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'^Maze/(?P<mazeName>[a-zA-Z0-9]+)$', views.basicLinuxInfoHandler),
-    url(r'^Maze/(?P<mazeName>[a-zA-Z0-9]+)/(?P<level>[0-9][0-9]?)$', views.basicLinuxHandler),
+    url(r'^Maze/(?P<mazeName>[a-zA-Z0-9]+)$', views.basic_linux_info_handler),
+    url(r'^Maze/(?P<mazeName>[a-zA-Z0-9]+)/(?P<level>[0-9][0-9]?)$', views.basic_linux_handler),
     url(r'^admin/', admin.site.urls),
 ]

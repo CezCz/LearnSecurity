@@ -9,6 +9,7 @@
     <link href="{% static 'components-font-awesome/css/font-awesome.css' %}" rel="stylesheet">
     <link href="{% static 'animate.css/animate.css' %}" rel="stylesheet">
     <link href="{% static 'app/css/override.css' %}" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400|Oxygen+Mono:400' rel='stylesheet' type='text/css'>
 
     <script>
         requirejs.config({
@@ -18,7 +19,8 @@
                 "tetherhack": './app/js/tetherhack',
                 "secApp": './app/js/secapp',
                 "bootstrap": './bootstrap/dist/js/bootstrap',
-                "navigo": './navigo/lib/navigoMod'
+                "navigo": './navigo/lib/navigoMod',
+                "typed": 'typed.js/js/typedMod'
             },
             shim: {
                 "jquery": {
@@ -26,6 +28,9 @@
                 },
                 "bootstrap": {
                     deps: ["jquery", "tetherhack"]
+                },
+                "typed": {
+                    deps: ["jquery"]
                 }
             }
         });
@@ -33,72 +38,88 @@
 </head>
 <body>
 
-<div id="wrapper" class="wrapper-pl-20">
-    <div class="sidePanel card">
-        <div class="card-block">
-            <h4 class="card-title">Learn Security</h4>
-            <h6 class="card-subtitle text-muted">Linux, Crypto and web security platform</h6>
-        </div>
-        <img class="img-fluid img-circle" src="{% static 'images/cat.jpg' %}" alt="Card image cap"
-             style="width:70%; margin:auto;">
-        <div class="card-block">
-            <h4 class="card-title">Card title</h4>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                card's
-                content.</p>
-        </div>
-
-        <div id="accordion" role="tablist" aria-multiselectable="true">
-            <ul class="list-group list-group-flush">
-                <li class="panel list-group-item mazeItem" data-toggle="collapse" data-parent="#accordion"
-                    href="#collapseOne"
-                    aria-expanded="false"
-                    aria-controls="collapseOne">
-                    <h6>
-                        Login
-                    </h6>
-                    <div id="collapseOne" class="collapse" role="tabpanel"
-                         aria-labelledby="headingOne">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                        squid.
-                    </div>
-                </li>
-                <li class="panel list-group-item mazeItem" id="mazeTab" data-toggle="collapse" data-parent="#accordion"
-                    href="#collapseTwo"
-                    aria-expanded="false" aria-controls="collapseTwo">
-                    <h6>
-                        Maze
-                    </h6>
-                    <div id="collapseTwo" class="collapse" role="tabpanel"
-                         aria-labelledby="headingTwo">
-                        <ul class="list-group">
-                            {% for maze in mazes %}
-                                <li class="list-group-item mazeItem" id="mazeInfoLinux">
-                                    <a href="#/Maze/{{ maze.name }}">{{ maze.name }}</a>
+<div class="container-fluid fullScreen">
+    <div class="row fullScreen">
+        <div id="navigationBar" class="col-lg-3 fullScreen">
+            <div class="row fullScreen">
+                <div id="mainNavigationBar" class="col-lg-12 p-l-0 p-r-0 fullScreen">
+                    <div class="sidePanel card">
+                        <div class="card-block">
+                            <h4 class="card-title">Learn Security</h4>
+                            <h6 class="card-subtitle text-muted">Linux, Crypto and web security platform</h6>
+                        </div>
+                        <img class="img-fluid img-circle" src="{% static 'images/cat.jpg' %}" alt="Card image cap"
+                             style="width:70%; margin:auto;">
+                        <div class="card-block">
+                            <h4 class="card-title">Card title</h4>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                of
+                                the
+                                card's
+                                content.</p>
+                        </div>
+                        <div id="accordion" role="tablist" class="itemList" aria-multiselectable="true">
+                            <ul class="list-group list-group-flush">
+                                <li class="panel list-group-item mazeItem" data-toggle="collapse"
+                                    data-parent="#accordion"
+                                    href="#collapseOne"
+                                    aria-expanded="false"
+                                    aria-controls="collapseOne">
+                                    <h6>
+                                        Login
+                                    </h6>
+                                    <div id="collapseOne" class="collapse" role="tabpanel"
+                                         aria-labelledby="headingOne">
+                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
+                                        richardson ad
+                                        squid.
+                                    </div>
                                 </li>
-                            {% endfor %}
-                        </ul>
+                                <li class="panel list-group-item mazeItem" id="mazeTab" data-toggle="collapse"
+                                    data-parent="#accordion"
+                                    href="#collapseTwo"
+                                    aria-expanded="false" aria-controls="collapseTwo">
+                                    <h6>
+                                        Maze
+                                    </h6>
+                                    <div id="collapseTwo" class="collapse" role="tabpanel"
+                                         aria-labelledby="headingTwo">
+                                        <ul class="list-group">
+                                            {% for maze in mazes %}
+                                                <li class="list-group-item mazeItem" id="mazeInfoLinux">
+                                                    <a href="#/Maze/{{ maze.name }}">{{ maze.name }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="panel list-group-item mazeItem" data-toggle="collapse"
+                                    data-parent="#accordion"
+                                    href="#collapseThree"
+                                    aria-expanded="false" aria-controls="collapseThree">
+                                    <h6>
+                                        About
+                                    </h6>
+                                    <div id="collapseThree" class="collapse" role="tabpanel"
+                                         aria-labelledby="headingThree">
+                                        Learn about Linux, Security and web protocols through fun maze-like tutorials!
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </li>
-                <li class="panel list-group-item mazeItem" data-toggle="collapse" data-parent="#accordion"
-                    href="#collapseThree"
-                    aria-expanded="false" aria-controls="collapseThree">
-                    <h6>
-                        About
-                    </h6>
-                    <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
-                        Learn about Linux, Security and web protocols through fun maze-like tutorials!
+                </div>
+                <div class="col-lg-5 p-l-0 p-r-0 fullScreen" style="display:none;">
+                    <div id="mazeDesc" class="mazeLevels card">
+
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="mazeLevels card" id="mazeDesc" style="display:none;">
+        <div id="sandBox" class="col-lg-9 fullScreen">
 
-    </div>
-
-    <div id="sandBox">
+        </div>
 
     </div>
 </div>
@@ -106,49 +127,54 @@
 <script>
     requirejs(['jquery', 'secApp', "navigo", 'bootstrap'],
             function ($, secApp, navigo) {
-
                 var router = new navigo(null, false);
-
                 router
                         .on({
-                            'Maze/:maze/:id': function (param) {
+                            'Maze/:maze/:id': function showSpecificMazeLevel(param) {
                                 $.get("/Maze/" + param.maze + "/" + param.id).then(function (data) {
                                     var mazeSandBox = $("#sandBox");
                                     mazeSandBox.html(data);
-                                    mazeSandBox.addClass("animated zoomIn");
+                                    mazeSandBox.addClass("animated fadeIn");
                                     mazeSandBox.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-                                        mazeSandBox.removeClass("animated zoomIn");
+                                        mazeSandBox.removeClass("animated fadeIn");
                                     });
                                 })
                             },
-                            'Maze/:maze': function (param) {
+                            'Maze/:maze': function showSpecificMaze(param) {
                                 $.get("/Maze/" + param.maze).then(function (data) {
                                     var mazeDescDiv = $("#mazeDesc");
                                     mazeDescDiv.html(data);
-                                    showMazeDescChangeWrapperPadding();
-                                    mazeDescDiv.show();
+
+                                    if ($("#navigationBar").hasClass("col-lg-3")) {
+                                        mazeDescDiv.parent().show();
+                                        $("#navigationBar").toggleClass("col-lg-4 col-lg-3");
+                                        $("#mainNavigationBar").toggleClass("col-lg-7 col-lg-12");
+                                        $("#sandBox").toggleClass("col-lg-8 col-lg-9");
+                                    }
+
                                     mazeDescDiv.addClass("animated fadeIn");
                                     mazeDescDiv.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
                                         mazeDescDiv.removeClass("animated fadeIn");
                                     });
+
                                 })
+                            },
+                            'Maze': function closeSpecificMaze() {
+                                var mazeDescDiv = $("#mazeDesc");
+
+                                if ($("#navigationBar").hasClass("col-lg-4")) {
+                                    mazeDescDiv.addClass("animated slideOutLeft");
+                                    $("#mainNavigationBar").toggleClass("col-lg-7 col-lg-12");
+                                    $("#navigationBar").toggleClass("col-lg-4 col-lg-3");
+                                    $("#sandBox").toggleClass("col-lg-8 col-lg-9");
+                                }
+
+                                mazeDescDiv.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                    mazeDescDiv.parent().hide();
+                                    mazeDescDiv.removeClass("animated slideOutLeft");
+                                });
                             }
                         }).resolve();
-
-                function showMazeDescChangeWrapperPadding() {
-                    var mazeDescDiv = $("#wrapper");
-                    mazeDescDiv.addClass("wrapper-pl-40");
-                    mazeDescDiv.removeClass("wrapper-pl-20");
-
-                }
-
-                function hideMazeDescChangeWrapperPadding() {
-                    var mazeDescDiv = $("#wrapper");
-                    mazeDescDiv.addClass("wrapper-pl-20");
-                    mazeDescDiv.removeClass("wrapper-pl-40");
-                    mazeDescDiv.hide();
-                }
-
 
                 $("[id^=collapse]").on("click", function (e) {
                     e.stopPropagation();

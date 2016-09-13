@@ -1,4 +1,3 @@
-<div class="container-fluid">
     <div class="row">
         <div class="col-lg-9 m-t-1">
 
@@ -13,6 +12,12 @@
             <h3>
                 Description
             </h3>
+
+            {# TODO #}
+            {# PARSER FOR SECTIONS FEATURING #}
+            {# TOOL TIPS #}
+            {# ANIMATIONS ? #}
+
             <p> {{ level.program_description.Program.main }}</p>
             {% for key, item in level.program_description.Program.sections.items %}
                 <p>
@@ -34,16 +39,50 @@
                 </div>
             {% endfor %}
             <h3> Example </h3>
-
-
-
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="terminalWrapper">
+                        <div class="terminalBar">
+                            User: bash - Konsole
+                        </div>
+                        <div class="terminalBody">
+                            user@domain:~$ <span class="typeplace"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-lg-3 m-t-1">
-
             <h1>
-                Mazes
+                Steps
             </h1>
-
         </div>
     </div>
-</div>
+<script>
+    requirejs(['jquery', 'secApp', 'typed'],
+            function ($, secApp) {
+                $(function () {
+                    $(".typeplace").typed({
+                        strings: ["{{ level.program_description.Terminal.command }}"],
+                        typeSpeed: 40,
+                        startDelay: 2000,
+                        callback: function () {
+                            setTimeout(function () {
+                                var terminalBody = $(".terminalBody");
+                                // TO DO
+                                // Handle cursor propery
+                                // Rezise properly
+                                // Format given text properly
+                                // Restart button
+                                terminalBody.append("<pre class='terminalPre'>" + htmlDecode("{{ level.program_description.Terminal.result }}") + "</pre>");
+                                terminalBody.append("<span>user@domain:~$ <span class='typed-cursor'>|</span></span>");
+                            }, 500);
+                        }
+                    });
+                });
+            });
+
+    function htmlDecode(value) {
+        return $('<div/>').html(value).text();
+    }
+</script>
