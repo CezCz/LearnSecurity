@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "Step 17, echo \$PATH"
+echo "Step 17, echo \$HOME"
 echo "Nothing to do here"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Step 19, rot3 cat cat filter/B | cut -d\"|\" -f3 | tr -d \"\\n\" | tr \"[A-Za-z]\" \"[X-ZA-Wx-za-w]\" "
+echo "Step 19, rot3 cat filter/B | cut -d\"|\" -f3 | tr -d \"\\n\" | tr \"[A-Za-z]\" \"[X-ZA-Wx-za-w]\" "
 sudo mkdir -p ${homedir}filter
 sudo touch ${homedir}filter/B
 

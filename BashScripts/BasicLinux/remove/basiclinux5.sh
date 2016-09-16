@@ -2,8 +2,7 @@
 
 . $DIR/util.sh
 
-echo "Step 5, ls list/pswd/privledges"
-removeFile "${homedir}list/pswd/privledges"
+echo "Step 5, ls list/privledges"
+removeFile "${homedir}list/privledges"
 
-removeDir ${homedir}list/pswd
 removeDir ${homedir}list

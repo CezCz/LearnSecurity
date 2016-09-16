@@ -9,7 +9,7 @@ do
    echo `cat /dev/urandom | tr -dc 'a-zA-Z0-9 ' | fold -w $(shuf -i 16-64 -n 1) | head -n 1` | sudo tee --append ${homedir}grep/A > /dev/null
    printDot c
 done
-echo "password:ImagineScrollingThat" | sudo tee ${homedir}grep/A > /dev/null
+echo "line 1269, password ImagineScrollingHere" | sudo tee ${homedir}grep/A > /dev/null
 for (( c=1; c<=2103; c++ ))
 do
    echo `cat /dev/urandom | tr -dc 'a-zA-Z0-9 ' | fold -w $(shuf -i 16-64 -n 1) | head -n 1` | sudo tee --append ${homedir}grep/A > /dev/null

@@ -1,7 +1,7 @@
 #!/bin/bash
 . $DIR/util.sh
 
-echo "Step 12, grep /home/basiclinux/grep/D -e \"^*.*;$"
+echo "Step 12, grep /home/basiclinux/grep/D -e \"^*.*;$\""
 sudo mkdir -p ${homedir}grep
 sudo touch ${homedir}grep/D
 for (( c=1; c<=1204; c++ ))

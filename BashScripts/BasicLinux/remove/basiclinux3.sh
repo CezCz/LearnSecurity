@@ -2,9 +2,9 @@
 
 . $DIR/util.sh
 
-echo "Step 3, removing /home/basiclinux/list/pswd//pass word:listcontent from filesystem"
+echo "Step 3, removing /home/basiclinux/list/pswd/listcontent from filesystem"
 
-removeFile "${homedir}list/pswd/pass word:listcontent"
+removeFile "${homedir}list/pswd/listcontent"
 
 removeDir ${homedir}list/pswd
 removeDir ${homedir}list

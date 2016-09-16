@@ -25,6 +25,7 @@ do
    if [ ! $( du -b ${homedir}find/file$i | cut -f1 ) -eq 2048 ]
    then
     sudo chown basiclinux:basiclinux ${homedir}find/file$i
+    sudo chmod 400 ${homedir}find/file$i
     printDot counter
    fi
 done

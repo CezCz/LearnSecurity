@@ -1,7 +1,7 @@
 #!/bin/bash
 . $DIR/util.sh
 
-echo "Step 14, cat headtail/A | head -1703 | tail -14 "
+echo "Step 14, head -1703 ~/headtail/A | tail -14 "
 sudo mkdir -p ${homedir}headtail
 sudo touch ${homedir}headtail/A
 

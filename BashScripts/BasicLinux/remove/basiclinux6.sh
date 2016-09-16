@@ -1,5 +1,4 @@
 #!/bin/bash
-
 . $DIR/util.sh
 
 echo "Step 6, cat cat/pass"
