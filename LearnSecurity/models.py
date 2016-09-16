@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
@@ -18,10 +19,31 @@ class Level(models.Model):
     # password_next = models.CharField(max_length=64)
     short_description = models.CharField(max_length=200)
     program_description = JSONField()
-    # riddle = JSONField()
 
     def __str__(self):
         return str(self.maze) + ", Level: " + str(self.level)
+
+class LevelStep(models.Model):
+    level = models.ForeignKey(Level)
+    level_step = models.IntegerField()
+    description = models.CharField(max_length=200)
+    help = models.CharField(max_length=200)
+    answer = models.CharField(max_length=200)
+    password = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "Step " + str(self.level_step) + " of " + str(self.level)
+
+class UserProgress(models.Model):
+    user = models.ForeignKey(User)
+    maze = models.ForeignKey(Maze)
+    level = models.ForeignKey(Level)
+    level_step = models.ForeignKey(LevelStep)
+    passed = models.BooleanField()
+
+    def __str__(self):
+        return "User " + self.user.email + "Progress of: " + str(self.level_step) + "Status: " + self.passed
+
 
 # Todo
 # class UserProgress

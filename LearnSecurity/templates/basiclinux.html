@@ -1,66 +1,174 @@
-    <div class="row">
-        <div class="col-lg-9 m-t-1">
+<div class="row">
+    <div class="col-lg-9 m-t-1">
 
-            <h1>
-                {{ maze.name }}
-            </h1>
-            <h4 class="text-muted">
-                Level {{ level.level }} - {{ level.short_description }}
-            </h4>
-            <hr/>
+        <h1>
+            {{ maze.name }}
+        </h1>
+        <h4 class="text-muted">
+            Level {{ level.level }} - {{ level.short_description }}
+        </h4>
 
-            <h3>
-                Description
-            </h3>
+    </div>
+    <div class="col-lg-3 m-t-1">
+        <h1>
+            Steps
+        </h1>
+    </div>
+    &nbsp
+    <hr/>
+</div>
+<div class="row">
+    <div class="col-lg-9">
 
-            {# TODO #}
-            {# PARSER FOR SECTIONS FEATURING #}
-            {# TOOL TIPS #}
-            {# ANIMATIONS ? #}
+        <h3>
+            Description
+        </h3>
 
-            <p> {{ level.program_description.Program.main }}</p>
-            {% for key, item in level.program_description.Program.sections.items %}
-                <p>
-                    {% for element in item %}
-                        {{ element }} <br/>
-                    {% endfor %}
-                </p>
-            {% endfor %}
+        <p> {{ level.program_description.Program.main }}</p>
+        {% for key, item in level.program_description.Program.sections.items %}
+            <p>
+                {% for element in item %}
+                    {{ element }} <br/>
+                {% endfor %}
+            </p>
+        {% endfor %}
 
-            <h3> Usage </h3>
-            {% for key, element in level.program_description.Usage.items %}
-                <div class="row">
-                    <div class="col-lg-3">
-                        <pre class="m-b-0">{{ key }}</pre>
-                    </div>
-                    <div class="col-lg-9">
-                        - {{ element }}
-                    </div>
-                </div>
-            {% endfor %}
-            <h3> Example </h3>
+        <h3> Usage </h3>
+        {% for key, element in level.program_description.Usage.items %}
             <div class="row">
-                <div class="col-lg-10">
-                    <div class="terminalWrapper">
-                        <div class="terminalBar">
-                            User: bash - Konsole
-                        </div>
-                        <div class="terminalBody">
-                            user@domain:~$ <span class="typeplace"></span>
-                        </div>
+                <div class="col-lg-3">
+                    <pre class="m-b-0">{{ key }}</pre>
+                </div>
+                <div class="col-lg-9">
+                    - {{ element }}
+                </div>
+            </div>
+        {% endfor %}
+        <h3> Example </h3>
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="terminalWrapper">
+                    <div class="terminalBar">
+                        User: bash - Konsole
+                    </div>
+                    <div class="terminalBody">
+                        user@domain:~$ <span class="typeplace"></span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 m-t-1">
-            <h1>
-                Steps
-            </h1>
+    </div>
+    <div class="col-lg-3 m-t-1">
+        <div id="mazeAccordion" role="tablist" class="itemList" aria-multiselectable="true">
+
+            <ul class="list-group list-group-flush">
+                {% for item in steps %}
+
+                    <li class="panel list-group-item mazeItem" data-toggle="collapse"
+                        data-parent="#mazeAccordion"
+                        href="#step{{ item.level_step }}"
+                        aria-expanded="false"
+                        aria-controls="step{{ item.level_step }}">
+                        <h6>
+                            Step {{ item.level_step }}
+                        </h6>
+                        <div id="step{{ item.level_step }}" class="collapse" role="tabpanel"
+                             aria-labelledby="heading{{ item.level_step }}">
+
+                            <p>{{ item.description }}</p>
+                            <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
+                                    data-maze-step="{{ item.level_step }}" data-type="check"
+                                    class="button btn btn-success">Check Answer
+                            </button>
+                            <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
+                                    data-maze-step="{{ item.level_step }}" data-type="help" class="button btn btn-info">
+                                Help!
+                            </button>
+                            <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
+                                    data-maze-step="{{ item.level_step }}" data-type="peek"
+                                    class="button btn btn-danger">Peek answer
+                            </button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
+</div>
 <script>
     requirejs(['jquery', 'secApp', 'typed'],
             function ($, secApp) {
+
+                $('body').on('click', function (e) {
+                    if ($(e.target).closest(".popover").length === 0) {
+                        $('.popover').popover('hide');
+                    }
+                });
+
+                $("div[id*='step']").on("click", function (e) {
+                    e.stopPropagation();
+                });
+
+                function getInformation() {
+                    var maze = $(this).attr("data-maze");
+                    var level = $(this).attr("data-maze-level");
+                    var step = $(this).attr("data-maze-step");
+                    return {maze: maze, level: level, step: step};
+                }
+
+
+                $("button[data-type='check']").on("click", function () {
+
+                    var mazeLevelStepInfo = getInformation.call(this);
+                    var inputTemplate = $("<div class='input-group'><span class='input-group-addon'></span><input id='passwordInput' class='form-control' type='text'/ placeholder='Enter password'></div>");
+
+                    $(this).on('shown.bs.popover', function () {
+                        $("#passwordInput").focus();
+                    }.bind(this));
+
+                    $(this).popover({content: inputTemplate, placement: "left", title: "Check answer", html: true});
+                    $(this).popover('show');
+
+                    inputTemplate.on("keyup", function () {
+                        var icon = $(this).find("i");
+                        if (icon === [] || !icon.hasClass("fa-spinner")) {
+                            $(this).find("span").html("<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>");
+                        }
+                    });
+
+                    inputTemplate.on("keyup", secApp.debounce(function () {
+                        var password = $(this).find("input").val();
+                        $.post("Maze/" + mazeLevelStepInfo.maze + "/" + mazeLevelStepInfo.level + "/check/" + mazeLevelStepInfo.step, {answer: password}).then(function (data) {
+                            if (data.check === true) {
+                                $(this).find("span").html("<i class='fa fa-check' aria-hidden='true'></i>");
+                            } else {
+                                $(this).find("span").html("<i class='fa fa-times' aria-hidden='true'></i>")
+                            }
+                        }.bind(this));
+                    }, 500));
+
+                });
+
+
+                $("button[data-type='help']").on("click", function () {
+                    var mazeLevelStepInfo = getInformation.call(this);
+                    $.post("Maze/" + mazeLevelStepInfo.maze + "/" + mazeLevelStepInfo.level + "/help/" + mazeLevelStepInfo.step).then(function (data) {
+                        $(this).popover({content: data.help, placement: "left", title: "Help!"});
+                        $(this).popover('show');
+                    }.bind(this));
+
+                });
+
+                $("button[data-type='peek']").on("click", function () {
+
+                    var mazeLevelStepInfo = getInformation.call(this);
+                    $.post("Maze/" + mazeLevelStepInfo.maze + "/" + mazeLevelStepInfo.level + "/peek/" + mazeLevelStepInfo.step).then(function (data) {
+                        $(this).popover({content: data.peek, placement: "left", title: "Password"});
+                        $(this).popover('show');
+                    }.bind(this));
+
+                });
+
                 $(function () {
                     $(".typeplace").typed({
                         strings: ["{{ level.program_description.Terminal.command }}"],

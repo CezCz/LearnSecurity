@@ -53,28 +53,14 @@
                         <div class="card-block">
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of
-                                the
-                                card's
-                                content.</p>
+                                of the card's content.</p>
                         </div>
                         <div id="accordion" role="tablist" class="itemList" aria-multiselectable="true">
+
                             <ul class="list-group list-group-flush">
-                                <li class="panel list-group-item mazeItem" data-toggle="collapse"
-                                    data-parent="#accordion"
-                                    href="#collapseOne"
-                                    aria-expanded="false"
-                                    aria-controls="collapseOne">
-                                    <h6>
-                                        Login
-                                    </h6>
-                                    <div id="collapseOne" class="collapse" role="tabpanel"
-                                         aria-labelledby="headingOne">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-                                        richardson ad
-                                        squid.
-                                    </div>
-                                </li>
+
+                                {% include "logincomponent.html" %}
+
                                 <li class="panel list-group-item mazeItem" id="mazeTab" data-toggle="collapse"
                                     data-parent="#accordion"
                                     href="#collapseTwo"
@@ -127,6 +113,62 @@
 <script>
     requirejs(['jquery', 'secApp', "navigo", 'bootstrap'],
             function ($, secApp, navigo) {
+
+                function handleLogout(e) {
+                    e.stopPropagation();
+                    var logoutButton = $(this);
+                    logoutButton.append("<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>");
+                    $.post("logout/").then(function () {
+                        return $.get("{% url 'logincomponent' %}")
+                    }).then(function (data) {
+                        var navigationList = $("#accordion").find("ul");
+                        navigationList.children().first().addClass("animated fadeOut");
+                        navigationList.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                            navigationList.children().first().remove();
+                            navigationList.hide().prepend(data).fadeIn();
+                            $("#loginForm").on('click', function (e) {
+                                e.stopPropagation()
+                            });
+                            $("#loginForm").on('submit', handleLogin);
+                        });
+                    }).fail(function () {
+                        console.warn("Logout failed for unknown reasons");
+                    }).always(function () {
+                        logoutButton.find("i").remove();
+                    });
+                }
+
+                function handleLogin() {
+                    var login = $("#loginEmail").val();
+                    var pass = $("#loginPassword").val();
+                    var remember = $("#loginRemember").is(':checked');
+
+                    var loginButton = $(this).find("button");
+                    loginButton.append("<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>");
+
+                    $.post("login/", {username: login, password: pass, remember: remember}).then(function () {
+                        return $.get("{% url 'logincomponent' %}")
+                    }).then(function (data) {
+                        var navigationList = $("#accordion").find("ul");
+                        navigationList.children().first().addClass("animated fadeOut");
+                        navigationList.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                            navigationList.children().first().remove();
+                            navigationList.hide().prepend(data).fadeIn();
+                            $("#logoutButton").on('click', handleLogout);
+                        });
+                    }).fail(function () {
+                        console.warn("Login failed for unknown reasons");
+                    }).always(function () {
+                        loginButton.find("i").remove();
+                    });
+                }
+
+                $("#loginForm").on('click', function (e) {
+                    e.stopPropagation();
+                });
+                $("#logoutButton").on('click', handleLogout);
+                $("#loginForm").on('submit', handleLogin);
+
                 var router = new navigo(null, false);
                 router
                         .on({
