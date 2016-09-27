@@ -23,6 +23,7 @@ class Level(models.Model):
     def __str__(self):
         return str(self.maze) + ", Level: " + str(self.level)
 
+
 class LevelStep(models.Model):
     level = models.ForeignKey(Level)
     level_step = models.IntegerField()
@@ -34,6 +35,7 @@ class LevelStep(models.Model):
     def __str__(self):
         return "Step " + str(self.level_step) + " of " + str(self.level)
 
+
 class UserProgress(models.Model):
     user = models.ForeignKey(User)
     maze = models.ForeignKey(Maze)
@@ -42,8 +44,9 @@ class UserProgress(models.Model):
     passed = models.BooleanField()
 
     def __str__(self):
-        return "User " + self.user.email + "Progress of: " + str(self.level_step) + "Status: " + self.passed
+        return "User " + self.user.email + "Progress of: " + str(self.level_step) + "Status: " + str(self.passed)
 
 
-# Todo
-# class UserProgress
+class UserPic(models.Model):
+    user = models.OneToOneField(User)
+    image = models.ImageField(upload_to="images", default='images/cat.jpg')

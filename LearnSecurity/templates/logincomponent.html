@@ -1,52 +1,34 @@
-{% if user.is_authenticated %}
-    <li class="panel list-group-item mazeItem" data-toggle="collapse"
-        data-parent="#accordion"
-        href="#collapseOne"
-        aria-expanded="false"
-        aria-controls="collapseOne">
-        <div class="row m-r-1">
-            <h6 class="col-lg-9">
-                My Account
-            </h6>
-            <button class="col-lg-3 btn btn-danger btn-sm" id="logoutButton">Logout
-            </button>
-        </div>
-        <div id="collapseOne" class="collapse" role="tabpanel"
-             aria-labelledby="headingOne">
-            Info
-        </div>
-    </li>
-{% else %}
-    <li class="panel list-group-item mazeItem" data-toggle="collapse"
-        data-parent="#accordion"
-        href="#collapseOne"
-        aria-expanded="false"
-        aria-controls="collapseOne">
-        <h6>
-            Login
-        </h6>
-        <div id="collapseOne" class="collapse" role="tabpanel"
-             aria-labelledby="headingOne">
+<li class="panel list-group-item mazeItem" data-toggle="collapse"
+    data-parent="#accordion"
+    href="#collapseOne"
+    aria-expanded="true"
+    aria-controls="collapseOne">
+    <h6>
+        Login
+    </h6>
+    <div id="collapseOne" class="collapse in" role="tabpanel"
+         aria-labelledby="headingOne">
 
-            <form id="loginForm" class="m-r-1">
-                <div class="form-group">
-                    <label for="loginEmail">Email address</label>
-                    <input type="text" class="form-control" id="loginEmail"
-                           aria-describedby="emailHelp" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" class="form-control" id="loginPassword"
-                           placeholder="Password">
-                </div>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input id="loginRemember" class="form-check-input" type="checkbox"> Remember me
-                    </label>
-                </div>
-                <button id="loginButton" class="btn btn-primary">Submit</button>
-            </form>
+        <form method="POST" action="/login/" id="loginForm" class="m-r-1">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    {{ form.remember }} Remember me!
+                </label>
+            </div>
+            <button id="loginButton" class="btn btn-primary" data-type="submit">Submit</button>
+        </form>
+        <button id="registerTrigger" class="btn btn-secondary btn-sm">
+            Register
+        </button>
+    </div>
+</li>
 
-        </div>
-    </li>
-{% endif %}

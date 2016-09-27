@@ -32,6 +32,7 @@ urlpatterns = [
 
     url(r'^login/', views.log_in),
     url(r'^logout/', views.log_out),
-    url(r'^logout/', views.register),
-    url(r'loginComponent', views.loginComponent, name="logincomponent")
+    url(r'^register/', views.register),
+    url(r'^change/credentials/', views.change_user_creds),
+    url(r'^change/password/', views.change_user_password)
 ]
