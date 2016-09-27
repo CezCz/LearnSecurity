@@ -1,0 +1,171 @@
+@media (max-width: 991px) {
+    .mazeLevels {
+        border-radius: 0;
+    }
+}
+
+@media (min-width: 992px) {
+
+    html, body, .fullScreen {
+        height: 100%;
+    }
+
+    .mazeLevels {
+        border-radius: 0 10px 10px 0;;
+    }
+
+}
+
+.itemList {
+    padding-left: 20px;
+}
+
+.list-group-flush .list-group-item {
+    padding-left: 10px;
+    padding-right: 0;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.icon_anchor {
+    color: black;
+}
+
+#closeMazeCard {
+    float: right;
+}
+
+.icon_anchor:hover {
+    color: grey;
+}
+
+.sidePanel, .mazeLevels {
+    min-height: 100%;
+    margin-bottom: 0;
+}
+
+.sidePanel {
+    border-radius: 0;
+    z-index: 1;
+}
+
+.mazeLevels {
+    border-left: 0;
+    z-index: 0;
+}
+
+#sandBox, #navigationBar, #mainNavigationBar, #mazeDesc {
+    transition: all 0.4s ease;
+}
+
+.col-0 {
+    width: 0;
+}
+
+.mazeItem {
+    border-left: 0;
+    border-right: 0;
+    margin-bottom: -2px;
+    cursor: pointer;
+}
+
+ul:last-child .mazeItem {
+    border-bottom: 0;
+}
+
+.terminalWrapper {
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.09) 0 20px 70px;
+}
+
+.terminalBar {
+    border-radius: 5px 5px 0 0;
+    text-align: center;
+    padding: 3px 0;
+    background-color: #475057;
+    color: rgb(230, 234, 233);
+    font-family: 'Oxygen', sans-serif;
+}
+
+.terminalBody {
+    padding: 5px;
+    border-radius: 0 0 5px 5px;
+    font-family: 'Oxygen Mono', monospace;
+    font-size: 12px;
+    background-color: #000;
+    color: #9A9A9A;
+    height: 265px;
+    margin-bottom: 20px;
+}
+
+.terminalPre {
+    white-space: pre-wrap;
+    overflow-y: auto;
+    color: #9A9A9A;
+    font-family: 'Oxygen Mono', monospace;
+    /*height: 235px;*/
+    margin: 0;
+}
+
+.typed-cursor {
+    opacity: 1;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.button {
+    display: block;
+    width: 100%;
+    border-radius: 0;
+}
+
+#logoutButton {
+    margin-top: -4px;
+}
+
+.image-preview-input {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.image-preview-input input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.image-preview-input-title {
+    margin-left: 2px;
+}
+
+.landingPage {
+    font-family: 'Cabin Sketch', cursive;
+}
+
+.landingDesc {
+    font-family: 'Cabin Sketch', cursive;
+}
+
+.landingPage h1 {
+    font-size: 60px;
+}
