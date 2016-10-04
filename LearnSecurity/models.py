@@ -38,13 +38,11 @@ class LevelStep(models.Model):
 
 class UserProgress(models.Model):
     user = models.ForeignKey(User)
-    maze = models.ForeignKey(Maze)
-    level = models.ForeignKey(Level)
     level_step = models.ForeignKey(LevelStep)
     passed = models.BooleanField()
 
     def __str__(self):
-        return "User " + self.user.email + "Progress of: " + str(self.level_step) + "Status: " + str(self.passed)
+        return "User " + self.user.email + " Progress of: " + str(self.level_step) + " Status: " + str(self.passed)
 
 
 class UserPic(models.Model):
