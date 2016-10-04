@@ -60,17 +60,24 @@
     </div>
     <div class="col-lg-3 m-t-1">
         <div id="mazeAccordion" role="tablist" class="itemList" aria-multiselectable="true">
-
             <ul class="list-group list-group-flush">
                 {% for item in steps %}
-
                     <li class="panel list-group-item mazeItem" data-toggle="collapse"
                         data-parent="#mazeAccordion"
                         href="#step{{ item.level_step }}"
                         aria-expanded="false"
                         aria-controls="step{{ item.level_step }}">
                         <h6>
-                            Step {{ item.level_step }}
+                            <div class="row">
+                                <span class="col-xs-1 passedTick">
+                                    {% if item.level_step in passed_steps %}
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    {% endif %}
+                                </span>
+                                <span class="col-xs-6">
+                                    Step {{ item.level_step }}
+                                </span>
+                            </div>
                         </h6>
                         <div id="step{{ item.level_step }}" class="collapse" role="tabpanel"
                              aria-labelledby="heading{{ item.level_step }}">
@@ -79,14 +86,17 @@
                             <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
                                     data-maze-step="{{ item.level_step }}" data-type="check"
                                     class="button btn btn-success">Check Answer
+
                             </button>
                             <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
-                                    data-maze-step="{{ item.level_step }}" data-type="help" class="button btn btn-info">
+                                    data-maze-step="{{ item.level_step }}" data-type="help" class="button btn btn-info"
+                                    {% if not user.is_authenticated %} disabled {% endif %}>
                                 Help!
                             </button>
                             <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
                                     data-maze-step="{{ item.level_step }}" data-type="peek"
-                                    class="button btn btn-danger">Peek answer
+                                    class="button btn btn-danger" {% if not user.is_authenticated %}
+                                    disabled {% endif %}>Peek answer
                             </button>
                         </div>
                     </li>
@@ -119,15 +129,21 @@
 
                 $("button[data-type='check']").on("click", function () {
 
-                    var mazeLevelStepInfo = getInformation.call(this);
+                    var answerButton = $(this);
+                    var mazeLevelStepInfo = getInformation.call(answerButton);
                     var inputTemplate = $("<div class='input-group'><span class='input-group-addon'></span><input id='passwordInput' class='form-control' type='text'/ placeholder='Enter password'></div>");
 
-                    $(this).on('shown.bs.popover', function () {
+                    answerButton.on('shown.bs.popover', function () {
                         $("#passwordInput").focus();
-                    }.bind(this));
+                    }.bind(answerButton));
 
-                    $(this).popover({content: inputTemplate, placement: "left", title: "Check answer", html: true});
-                    $(this).popover('show');
+                    answerButton.popover({
+                        content: inputTemplate,
+                        placement: "left",
+                        title: "Check answer",
+                        html: true
+                    });
+                    answerButton.popover('show');
 
                     inputTemplate.on("keyup", function () {
                         var icon = $(this).find("i");
@@ -141,6 +157,7 @@
                         $.post("Maze/" + mazeLevelStepInfo.maze + "/" + mazeLevelStepInfo.level + "/check/" + mazeLevelStepInfo.step, {answer: password}).then(function (data) {
                             if (data.check === true) {
                                 $(this).find("span").html("<i class='fa fa-check' aria-hidden='true'></i>");
+                                answerButton.closest("li").find(".passedTick").html('<i class="fa fa-check tada animated" aria-hidden="true"></i>');
                             } else {
                                 $(this).find("span").html("<i class='fa fa-times' aria-hidden='true'></i>")
                             }

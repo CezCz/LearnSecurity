@@ -25,7 +25,8 @@
                 "navigo": './navigo/lib/navigoMod',
                 "typed": 'typed.js/js/typedMod',
                 "navigo_init": './app/js/navigo_init',
-                "user_logic": './app/js/user_logic'
+                "user_logic": './app/js/user_logic',
+                "maze_logic": './app/js/maze_logic'
             },
             shim: {
                 "jquery": {
@@ -57,12 +58,11 @@
                             <h6 class="card-subtitle text-muted">Linux, Crypto and web security platform</h6>
                         </div>
                         {% if user.is_authenticated %}
-                            <img class="img-fluid img-circle" src="{% static image.url %}" alt="Card image cap"
-                                 style="width:70%; margin:auto;">
+                            <img class="img-fluid img-circle" src="{% static image.url %}" alt="User Pic"
+                                 style="margin:auto;" width="250px" height="250px">
                         {% else %}
                             <img class="img-fluid img-circle" src="{% static 'images/anonymous.jpg' %}"
-                                 alt="Card image cap"
-                                 style="width:70%; margin:auto;">
+                                 alt="Anonymous pic" style="margin:auto;" width="250px" height="250px">
                         {% endif %}
                         <div class="card-block">
                             <h4 class="card-title">Hey,
