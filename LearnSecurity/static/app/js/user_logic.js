@@ -4,24 +4,62 @@
 define(['jquery'], function ($) {
     "use strict";
 
+    var loginForm = $('#loginForm');
+    var logoutButton = $("#logoutButton");
+
+    logoutButton.on('click', handleLogout);
+    loginForm.on('submit', handleLogin);
+
     $("#changePasswordTrigger").on("click", function () {
-        var editPassModal = $("#editPasswordModal");
-        if (editPassModal.length === 0) {
-            $.get("/change/password/").then(function (data) {
+        var changePassFormHandler = function (form, url) {
+            handleForm(form, url);
+        };
+        displayModalForm("#editPasswordModal", "/change/password/", "#editPasswordForm", changePassFormHandler);
+    });
+
+    $("#editUserTrigger").on("click", function () {
+        var editUserFormHandler = function (form, url) {
+            handleForm(form, url);
+            createCustomImageInput();
+        };
+        displayModalForm("#editUserModal", "/change/credentials/", "#editUserForm", editUserFormHandler);
+    });
+
+    $("#registerTrigger").on("click", function () {
+        var registerFormHandler = function (form, url) {
+            handleForm(form, url);
+        };
+        displayModalForm("#registerModal", "/register/", "#registerForm", registerFormHandler);
+    });
+
+    function displayModalForm(modalId, modalUrl, formId, formHandleFunction) {
+        var modal = $(modalId);
+
+        if (modalExists()) {
+            $.get(modalUrl).then(function (data) {
                 var modal = $(data).modal();
                 modal.on('shown.bs.modal', function () {
-                    var editPassForm = $("#editPasswordForm");
+                    var form = $(formId);
                     $('#id_username').focus();
 
-                    if ($._data(editPassForm.get(0), "events") === undefined) {
-                        handleForm(editPassForm, "/change/password/");
+                    if ($._data(form.get(0), "events") === undefined) {
+                        formHandleFunction(form, modalUrl);
                     }
+                });
+                modal.on('hidden.bs.modal', function () {
+                    var form = $(formId);
+                    getSubmitButton(form).attr('class', 'btn btn-secondary');
+                    removeIconFromSubmitButton(form);
                 });
             });
         } else {
-            editPassModal.modal();
+            modal.modal();
         }
-    });
+
+        function modalExists() {
+            return modal.length === 0;
+        }
+    }
 
     function createCustomImageInput() {
         $("body").on('click', '#close-preview', function () {
@@ -68,7 +106,7 @@ define(['jquery'], function ($) {
                 var img = $('<img/>', {
                     id: 'dynamic',
                     width: 250,
-                    height: 200
+                    height: 250
                 });
                 var file = this.files[0];
                 var reader = new FileReader();
@@ -84,52 +122,13 @@ define(['jquery'], function ($) {
         });
     }
 
-    $("#editUserTrigger").on("click", function () {
-        var editUserModal = $("#editUserModal");
-        if (editUserModal.length === 0) {
-            $.get("/change/credentials/").then(function (data) {
-                var modal = $(data).modal();
-                modal.on('shown.bs.modal', function () {
-                    var editUserForm = $("#editUserForm");
-                    $('#id_username').focus();
-
-                    if ($._data(editUserForm.get(0), "events") === undefined) {
-                        handleForm(editUserForm, "/change/credentials/");
-                        createCustomImageInput();
-                    }
-
-                });
-            });
-        } else {
-            editUserModal.modal();
-        }
-    });
-
-    $("#registerTrigger").on("click", function () {
-        var registerModal = $("#registerModal");
-        if (registerModal.length === 0) {
-            $.get("/register/").then(function (data) {
-                var modal = $(data).modal();
-                modal.on('shown.bs.modal', function () {
-                    var registerForm = $("#registerForm");
-                    $('#id_username').focus();
-
-                    if ($._data(registerForm.get(0), "events") === undefined) {
-                        handleForm(registerForm, "/register/");
-                    }
-
-                });
-            });
-        } else {
-            registerModal.modal();
-        }
-    });
-
     function clearFormFeedback(form) {
         var inputs = form.find(':input');
         inputs.removeClass("form-control-danger");
         inputs.siblings(".form-control-feedback").text("");
         inputs.parent("div").removeClass("has-danger");
+        getSubmitButton(form).attr('class', 'btn btn-secondary');
+        removeIconFromSubmitButton(form);
         return inputs;
     }
 
@@ -141,14 +140,17 @@ define(['jquery'], function ($) {
         return values;
     }
 
+    function getSubmitButton(form) {
+        return form.find("[data-type=submit]");
+    }
+
     function addSpinnerToSubmitButton(form) {
-        var submitButton = form.find("[data-type=submit]");
+        var submitButton = getSubmitButton(form);
         submitButton.append("<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>");
     }
 
-    function removeSpinnerFromSubmitButton(form) {
-        var submitButton = form.find("[data-type=submit]");
-        submitButton.find("i").remove();
+    function removeIconFromSubmitButton(form) {
+        getSubmitButton(form).find("i").remove();
     }
 
     function feedbackFormSubmissionFail(data, form) {
@@ -169,11 +171,16 @@ define(['jquery'], function ($) {
                 }
             }
         }
+
+        getSubmitButton(form).attr('class', 'btn btn-danger');
+        getSubmitButton(form).append("<i class='fa fa-times wobble animated' aria-hidden='true'></i>");
         console.warn("Registration failed");
     }
 
-    function feedbackFormSubmissionSuccess() {
-        console.log("test");
+    function feedbackFormSubmissionSuccess(form) {
+        var submitInput = getSubmitButton(form);
+        submitInput.attr('class', 'btn btn-success');
+        submitInput.append("<i class='fa fa-check tada animated' aria-hidden='true'></i>");
     }
 
     function handleForm(form, postUrl) {
@@ -184,10 +191,10 @@ define(['jquery'], function ($) {
             var values = extractInputValues(inputs);
 
             addSpinnerToSubmitButton(form);
-            $.post(postUrl, values).then(function () {
+            $.post(postUrl, values).always(function () {
+                removeIconFromSubmitButton(form);
+            }).then(function () {
                 feedbackFormSubmissionSuccess(form);
-            }).always(function () {
-                removeSpinnerFromSubmitButton(form);
             }).fail(function (errors) {
                 feedbackFormSubmissionFail(errors, form);
             });
@@ -210,10 +217,7 @@ define(['jquery'], function ($) {
         });
     }
 
-    var loginForm = $('#loginForm');
-
     function handleLogin(e) {
-
         var inputs = $('#loginForm').find(':input');
         inputs.removeClass("form-control-danger");
         inputs.siblings(".form-control-feedback").text("");
@@ -265,19 +269,5 @@ define(['jquery'], function ($) {
         });
         return false;
     }
-
-    $("#logoutButton").on('click', handleLogout);
-
-    loginForm.on('submit', function (e) {
-        return handleLogin(e);
-    });
-    loginForm.on('click', function (e) {
-        e.stopPropagation();
-    });
-
-    $("[id^=collapse]").on("click", function (e) {
-        e.stopPropagation();
-    });
-
 
 });

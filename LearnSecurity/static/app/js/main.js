@@ -3,6 +3,13 @@
  */
 
 requirejs(['jquery', 'secApp', "navigo_init", 'bootstrap', 'user_logic'], function ($, secApp) {
+    "use strict";
+
+    $("[id^=collapse]").on("click", function (e) {
+        e.stopPropagation();
+    });
+
+
 
     //new Tether({
     //    element: $('#login_description'),

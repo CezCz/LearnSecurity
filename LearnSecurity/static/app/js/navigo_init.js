@@ -53,5 +53,4 @@ define(['jquery', 'navigo'], function ($, navigo) {
             }
         }).resolve();
 
-
 });
