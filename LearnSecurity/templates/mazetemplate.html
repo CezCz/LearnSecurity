@@ -18,49 +18,64 @@
     <hr/>
 </div>
 <div class="row">
+
     <div class="col-lg-9">
 
-        <h3>
-            Description
-        </h3>
+        {% if level.program_description.Program.main %}
+            <h3>
+                Description
+            </h3>
 
-        <p> {{ level.program_description.Program.main }}</p>
-        {% for key, item in level.program_description.Program.sections.items %}
-            <p>
-                {% for element in item %}
-                    {{ element }} <br/>
-                {% endfor %}
-            </p>
-        {% endfor %}
+            <p class="infoText"> {{ level.program_description.Program.main }}</p>
+        {% endif %}
 
-        <h3> Usage </h3>
-        {% for key, element in level.program_description.Usage.items %}
+        {% if level.program_description.Program.sections %}
+            {% for key, item in level.program_description.Program.sections.items %}
+                <p class="infoText">
+                    {% for element in item %}
+                        {{ element }} <br/>
+                    {% endfor %}
+                </p>
+            {% endfor %}
+        {% endif %}
+
+        {% if level.program_description.Usage %}
+            <h3 class="m-t-1"> Usage </h3>
+            {% for key, element in level.program_description.Usage.items %}
+                <div class="row commandExColumn">
+                    <div class="col-lg-5 commandExample">
+                        {{ key }}
+                    </div>
+                    <div class="col-lg-7 commandExample">
+                        - {{ element }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if level.program_description.Terminal %}
+            <h3 class="m-t-1"> Example </h3>
             <div class="row">
-                <div class="col-lg-3">
-                    <pre class="m-b-0">{{ key }}</pre>
-                </div>
-                <div class="col-lg-9">
-                    - {{ element }}
-                </div>
-            </div>
-        {% endfor %}
-        <h3> Example </h3>
-        <div class="row">
-            <div class="col-lg-10">
-                <div class="terminalWrapper">
-                    <div class="terminalBar">
-                        User: bash - Konsole
-                    </div>
-                    <div class="terminalBody">
-                        user@domain:~$ <span class="typeplace"></span>
+                <div class="col-xs-12">
+                    <div class="terminalWrapper">
+                        <div class="terminalBar">
+                            User: bash - Konsole
+                        <span id="restartTerminal" class="pull-right" title="repeat"><i
+                                class="fa fa-repeat" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="terminalBody">
+                            user@domain:~$ <span class="typeplace"></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
+
     </div>
-    <div class="col-lg-3 m-t-1">
+
+    <div class="col-lg-3">
         <div id="mazeAccordion" role="tablist" class="itemList" aria-multiselectable="true">
-            <ul class="list-group list-group-flush">
+            <ul class="list-group list-group-flush ">
                 {% for item in steps %}
                     <li class="panel list-group-item mazeItem" data-toggle="collapse"
                         data-parent="#mazeAccordion"
@@ -186,25 +201,37 @@
 
                 });
 
-                $(function () {
-                    $(".typeplace").typed({
-                        strings: ["{{ level.program_description.Terminal.command }}"],
-                        typeSpeed: 40,
-                        startDelay: 2000,
-                        callback: function () {
-                            setTimeout(function () {
-                                var terminalBody = $(".terminalBody");
-                                // TO DO
-                                // Handle cursor propery
-                                // Rezise properly
-                                // Format given text properly
-                                // Restart button
-                                terminalBody.append("<pre class='terminalPre'>" + htmlDecode("{{ level.program_description.Terminal.result }}") + "</pre>");
-                                terminalBody.append("<span>user@domain:~$ <span class='typed-cursor'>|</span></span>");
-                            }, 500);
+                {% if level.program_description.Terminal %}
+                    function triggerConsole() {
+                        if (window.previousTypedObject) {
+                            window.previousTypedObject.reset();
                         }
+                        $('.terminalBody').html('{{ level.program_description.Terminal.prompt_begin }} <span class="typeplace"></span>');
+
+                        $(".typeplace").typed({
+                            strings: ["{{ level.program_description.Terminal.command }}"],
+                            typeSpeed: 20,
+                            startDelay: 200,
+                            callback: function () {
+                                setTimeout(function () {
+                                    var terminalBody = $(".terminalBody");
+                                    terminalBody.find(".typed-cursor").remove();
+                                    terminalBody.append("<pre class='terminalPre'>" + htmlDecode("{{ level.program_description.Terminal.result }}") + "</pre>");
+                                    terminalBody.append("<span>{{ level.program_description.Terminal.prompt_end }} <span class='typed-cursor'>|</span></span>");
+                                }, 500);
+                            }
+                        });
+
+                        window.previousTypedObject = $(".typeplace").data('typed');
+                    }
+
+                    triggerConsole();
+                    $("#restartTerminal").on('click', function () {
+                        triggerConsole();
                     });
-                });
+                {% endif %}
+
+
             });
 
     function htmlDecode(value) {
