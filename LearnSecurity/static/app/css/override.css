@@ -16,8 +16,8 @@
 
 }
 
-.itemList {
-    padding-left: 20px;
+body {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 30%, rgba(227, 227, 227, 1) 100%);
 }
 
 .list-group-flush .list-group-item {
@@ -53,7 +53,13 @@ a:hover {
 
 .mazeLevels {
     border-left: 0;
+    border-top: 0;
+    border-bottom: 0;
     z-index: 0;
+}
+
+#sandBox {
+    overflow-y: auto;
 }
 
 #sandBox, #navigationBar, #mainNavigationBar, #mazeDesc {
@@ -67,11 +73,11 @@ a:hover {
 .mazeItem {
     border-left: 0;
     border-right: 0;
-    margin-bottom: -2px;
     cursor: pointer;
+    background: transparent;
 }
 
-ul:last-child .mazeItem {
+.mazeItem ul li:last-child {
     border-bottom: 0;
 }
 
@@ -96,7 +102,7 @@ ul:last-child .mazeItem {
     font-size: 12px;
     background-color: #000;
     color: #9A9A9A;
-    height: 265px;
+    height: 350px;
     margin-bottom: 20px;
 }
 
@@ -105,7 +111,6 @@ ul:last-child .mazeItem {
     overflow-y: auto;
     color: #9A9A9A;
     font-family: 'Oxygen Mono', monospace;
-    /*height: 235px;*/
     margin: 0;
 }
 
@@ -158,14 +163,68 @@ ul:last-child .mazeItem {
     margin-left: 2px;
 }
 
-.landingPage {
-    font-family: 'Cabin Sketch', cursive;
-}
-
-.landingDesc {
-    font-family: 'Cabin Sketch', cursive;
-}
-
 .landingPage h1 {
     font-size: 60px;
+}
+
+.infoText {
+    margin-bottom: 0;
+    padding-bottom:0.2em;
+}
+
+.sketchText {
+    font-family: 'Cabin Sketch', cursive;
+    font-size: 20px;
+}
+
+.bubbleText {
+    z-index: 999;
+}
+
+.opaque02 {
+    opacity: 0.2;
+}
+
+.markOutline {
+    border: #0275d8 2px solid;
+    margin: 0;
+}
+
+.presentationTether {
+    transition: all 0.2s ease;
+}
+
+
+.commandExColumn:hover {
+    background-color: rgba(2, 117, 216, 0.05);
+}
+
+.commandExColumn:hover > .commandExample {
+    overflow:visible;
+    white-space:normal;
+    z-index:10;
+}
+
+.commandExample {
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+}
+
+#restartTerminal {
+    margin-right:10px;
+}
+
+#restartTerminal:hover {
+    cursor: pointer;
+    color:grey;
+}
+
+.infoSection {
+    padding: 0.5em;
+}
+
+svg {
+    display:block;
+    margin:auto;
 }

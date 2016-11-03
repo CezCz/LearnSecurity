@@ -102,4 +102,3 @@ class ChangePicForm(forms.ModelForm):
     class Meta:
         model = UserPic
         fields = ('image',)
-        exclude = ('user',)

@@ -27,7 +27,7 @@ class Level(models.Model):
 class LevelStep(models.Model):
     level = models.ForeignKey(Level)
     level_step = models.IntegerField()
-    description = models.CharField(max_length=200)
+    description = JSONField(default="")
     help = models.CharField(max_length=200)
     answer = models.CharField(max_length=200)
     password = models.CharField(max_length=200)
@@ -47,4 +47,4 @@ class UserProgress(models.Model):
 
 class UserPic(models.Model):
     user = models.OneToOneField(User)
-    image = models.ImageField(upload_to="images", default='images/cat.jpg')
+    image = models.ImageField(default='/cat.jpg')

@@ -14,47 +14,72 @@
             Steps
         </h1>
     </div>
-    &nbsp
-    <hr/>
 </div>
 <div class="row">
 
     <div class="col-lg-9">
 
         {% if level.program_description.Program.main %}
-            <h3>
-                Description
-            </h3>
-
-            <p class="infoText"> {{ level.program_description.Program.main }}</p>
+            {% if level.program_description.Program.header %}
+                <h3>
+                    {{ level.program_description.Program.header }}
+                </h3>
+            {% endif %}
+            <div class="infoSection">
+                <p class="infoText"> {{ level.program_description.Program.main }}</p>
+            </div>
         {% endif %}
 
         {% if level.program_description.Program.sections %}
             {% for key, item in level.program_description.Program.sections.items %}
-                <p class="infoText">
-                    {% for element in item %}
-                        {{ element }} <br/>
-                    {% endfor %}
-                </p>
+                <div class="infoSection">
+                    {% if item.header %}
+                        <h5>
+                            {{ item.header }}
+                        </h5>
+                    {% endif %}
+                    {% if item.text %}
+                        <p class="infoText">
+                            {% for textItem in item.text %}
+                                {{ textItem }} <br/>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    {% if item.list %}
+                        <ul>
+                            {% for li in item.list %}
+                                <li>{{ li }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <div>
+                        {% if item.svg %}
+                            {{ item.svg | safe }}
+                        {% endif %}
+                    </div>
+                </div>
+
             {% endfor %}
         {% endif %}
 
         {% if level.program_description.Usage %}
-            <h3 class="m-t-1"> Usage </h3>
-            {% for key, element in level.program_description.Usage.items %}
-                <div class="row commandExColumn">
-                    <div class="col-lg-5 commandExample">
-                        {{ key }}
+            <h3> Usage </h3>
+            <div class="infoSection">
+                {% for key, element in level.program_description.Usage.items %}
+                    <div class="row commandExColumn">
+                        <div class="col-lg-5 commandExample">
+                            {{ key }}
+                        </div>
+                        <div class="col-lg-7 commandExample">
+                            - {{ element }}
+                        </div>
                     </div>
-                    <div class="col-lg-7 commandExample">
-                        - {{ element }}
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         {% endif %}
 
         {% if level.program_description.Terminal %}
-            <h3 class="m-t-1"> Example </h3>
+            <h3> Example </h3>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="terminalWrapper">
@@ -86,7 +111,7 @@
                             <div class="row">
                                 <span class="col-xs-1 passedTick">
                                     {% if item.level_step in passed_steps %}
-                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                        <i class="fa fa-check"></i>
                                     {% endif %}
                                 </span>
                                 <span class="col-xs-6">
@@ -97,7 +122,10 @@
                         <div id="step{{ item.level_step }}" class="collapse" role="tabpanel"
                              aria-labelledby="heading{{ item.level_step }}">
 
-                            <p>{{ item.description }}</p>
+                            <p>{{ item.description.text }}</p>
+                            {% if item.description.svg %}
+                                {{ item.description.svg | safe }}
+                            {% endif %}
                             <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
                                     data-maze-step="{{ item.level_step }}" data-type="check"
                                     class="button btn btn-success">Check Answer

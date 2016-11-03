@@ -1,14 +1,22 @@
 import json
 import operator
+import os
+from base64 import b64decode
 
+import re
+
+import collections
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
 from django.http import HttpResponse, JsonResponse, HttpResponseServerError
 from django.shortcuts import render
 from django.template.context_processors import csrf
+from django.utils.crypto import get_random_string
 
 from LearnSecurity.forms import RegistrationForm, LoginForm, EditUserForm, ChangePasswordForm, ChangePicForm
 from LearnSecurity.models import Maze, Level, LevelStep, UserPic, UserProgress
+from LearnSecurityApp.settings import MEDIA_ROOT
 
 
 def index(request):
@@ -19,7 +27,7 @@ def index(request):
         return render(request, "base.html", {"mazes": mazes, "login_form": LoginForm()})
 
 
-def basic_linux_info_handler(request, maze_name):
+def maze_level_card_handler(request, maze_name):
     maze = Maze.objects.get(name=maze_name)
     levels = list(Level.objects.filter(maze=maze))
     levels.sort(key=operator.attrgetter('level'))
@@ -29,6 +37,7 @@ def basic_linux_info_handler(request, maze_name):
 def basic_linux_handler(request, maze_name, level):
     maze = Maze.objects.get(name=maze_name)
     db_level = Level.objects.get(maze=maze, level=level)
+    db_level.program_description['Program']['sections'] = collections.OrderedDict(sorted(db_level.program_description['Program']['sections'].items()))
     steps = list(LevelStep.objects.filter(level=db_level))
     steps = sorted(steps, key=operator.attrgetter('level_step'))
 
@@ -38,7 +47,7 @@ def basic_linux_handler(request, maze_name, level):
         passed_level_steps = [passed['level_step'] for passed in
                               LevelStep.objects.filter(userprogress__in=passed_steps).values('level_step')]
 
-    return render(request, "basiclinux.html",
+    return render(request, "mazetemplate.html",
                   {"maze": maze, "level": db_level, "steps": steps, "passed_steps": passed_level_steps})
 
 
@@ -118,12 +127,34 @@ def register(request):
 def change_user_creds(request):
     if request.method == 'POST':
         form = EditUserForm(request.POST, instance=request.user)
-        # pic_form = ChangePicForm(request.POST)
+
+        if 'image' in request.POST:
+            try:
+                user_pic = UserPic.objects.get(user=request.user)
+                unique_id = user_pic.image.name
+                if unique_id != 'cat.jpg':
+                    image = os.path.join(MEDIA_ROOT, unique_id)
+                    os.remove(image)
+                else:
+                    unique_id = get_random_string(length=64)
+            except:
+                user_pic = UserPic()
+                user_pic.user = request.user
+                unique_id = get_random_string(length=64)
+
+            image = request.POST['image']
+            image_type = image[image.find('/') + 1:image.find(';')]
+            image_base64 = image[image.find(',') + 1:]
+            image_data = b64decode(image_base64)
+            decoded_image = ContentFile(image_data, unique_id + '.' + image_type)
+            pic_form_data = {"image": decoded_image}
+            pic_form = ChangePicForm(pic_form_data, instance=user_pic)
+            if pic_form.is_valid():
+                user_pic.image = decoded_image
+                user_pic.save()
+
         if form.is_valid():
-            # and pic_form.is_valid():
             form.save()
-            # pic_form.user = request.user
-            # pic_form.save()
 
             return HttpResponse()
         else:

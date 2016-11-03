@@ -91,7 +91,7 @@ define(['jquery'], function ($) {
                 html: true,
                 title: "<strong>Preview</strong>" + $(closebtn)[0].outerHTML,
                 content: "There's no image",
-                placement: 'bottom'
+                placement: 'top'
             });
             // Clear event
             $('.image-preview-clear').click(function () {
@@ -109,12 +109,14 @@ define(['jquery'], function ($) {
                     height: 250
                 });
                 var file = this.files[0];
+                var thisInput = $(this);
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     $(".image-preview-input-title").text("Change");
                     $(".image-preview-clear").show();
                     $(".image-preview-filename").val(file.name);
                     img.attr('src', e.target.result);
+                    thisInput.attr('file-data', e.target.result);
                     $(".image-preview").attr("data-content", $(img)[0].outerHTML).popover("show");
                 };
                 reader.readAsDataURL(file);
@@ -135,7 +137,11 @@ define(['jquery'], function ($) {
     function extractInputValues(inputs) {
         var values = {};
         inputs.each(function () {
-            values[this.name] = $(this).val();
+            if (!$(this).is("[type=file]")) {
+                values[this.name] = $(this).val();
+            } else {
+                values[this.name] = $(this).attr('file-data');
+            }
         });
         return values;
     }
@@ -189,6 +195,7 @@ define(['jquery'], function ($) {
 
             var inputs = clearFormFeedback(form);
             var values = extractInputValues(inputs);
+            console.log(values);
 
             addSpinnerToSubmitButton(form);
             $.post(postUrl, values).always(function () {

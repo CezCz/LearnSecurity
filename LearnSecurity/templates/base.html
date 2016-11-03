@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Linux, Security, Cryptography</title>
     <script src="{% static 'requirejs/require.js' %}"></script>
-
     <link href="{% static 'bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'components-font-awesome/css/font-awesome.css' %}" rel="stylesheet">
     <link href="{% static 'animate.css/animate.css' %}" rel="stylesheet">
@@ -26,7 +25,8 @@
                 "typed": 'typed.js/js/typedMod',
                 "navigo_init": './app/js/navigo_init',
                 "user_logic": './app/js/user_logic',
-                "maze_logic": './app/js/maze_logic'
+                "maze_logic": './app/js/maze_logic',
+                "jquery-cookie": './jquery.cookie/jquery.cookie'
             },
             shim: {
                 "jquery": {
@@ -40,51 +40,55 @@
                 },
                 "typed": {
                     deps: ["jquery"]
+                },
+                "jquery-cookie": {
+                    deps: ["jquery"]
                 }
             }
         });
     </script>
 </head>
-<body style="background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 30%, rgba(227,227,227,1) 100%)">
+<body>
 
 <div class="container-fluid fullScreen">
     <div class="row fullScreen">
         <div id="navigationBar" class="col-lg-3 fullScreen">
             <div class="row fullScreen">
                 <div id="mainNavigationBar" class="col-lg-12 p-l-0 p-r-0 fullScreen">
-                    <div class="sidePanel card">
-                        <div class="card-block">
-                            <h4 class="card-title">Learn Security</h4>
-                            <h6 class="card-subtitle text-muted">Linux, Crypto and web security platform</h6>
-                        </div>
-                        {% if user.is_authenticated %}
-                            <img class="img-fluid img-circle" src="{% static image.url %}" alt="User Pic"
-                                 style="margin:auto;" width="250px" height="250px">
-                        {% else %}
-                            <img class="img-fluid img-circle" src="{% static 'images/anonymous.jpg' %}"
-                                 alt="Anonymous pic" style="margin:auto;" width="250px" height="250px">
-                        {% endif %}
-                        <div class="card-block">
-                            <h4 class="card-title">Hey,
-                                {% if user.is_authenticated %}
-                                    {% if user.get_full_name == "" %}
-                                        {{ user.username }}
+                    <div class="sidePanel card card-outline-secondary">
+                        <div id="userWrapper">
+                            <a href="/">
+                                <div class="card-block ">
+                                    <h4 class="card-title text-xs-center">Learn Security</h4>
+                                    <h6 class="card-subtitle text-muted text-xs-center">Linux, Crypto and web security
+                                        platform</h6>
+                                </div>
+                            </a>
+                            {% if user.is_authenticated %}
+                                <img class="img-fluid img-circle" src="{% static image.url %}" alt="User Pic"
+                                     style="margin:auto;" width="250px" height="250px">
+                            {% else %}
+                                <img class="img-fluid img-circle" src="{% static 'images/anonymous.jpg' %}"
+                                     alt="Anonymous pic" style="margin:auto;" width="250px" height="250px">
+                            {% endif %}
+                            <div class="card-block">
+                                <h4 class="card-title">Hey,
+                                    {% if user.is_authenticated %}
+                                        {% if user.get_full_name == "" %}
+                                            {{ user.username }}
+                                        {% else %}
+                                            {{ user.get_full_name }}
+                                        {% endif %}
                                     {% else %}
-                                        {{ user.get_full_name }}
+                                        Guest!
                                     {% endif %}
-                                {% else %}
-                                    Guest!
-                                {% endif %}
-                            </h4>
-                            <p class="card-text">
-                                Some quick example text to build on the card title and make up the bulk
-                                of the card's content.
-                            </p>
+                                </h4>
+                            </div>
+
+
                         </div>
-                        <div id="accordion" role="tablist" class="itemList" aria-multiselectable="true">
-
-                            <ul class="list-group list-group-flush">
-
+                        <div id="accordion" role="tablist" class="itemList " aria-multiselectable="true">
+                            <ul class="list-group list-group-flush card-outline-primary">
                                 {% if user.is_authenticated %}
                                     {% include "logoutcomp.html" %}
                                 {% else %}
@@ -102,19 +106,19 @@
                                          aria-labelledby="headingTwo">
                                         <ul class="list-group">
                                             {% for maze in mazes %}
-                                                <li class="list-group-item mazeItem" id="mazeInfoLinux">
+                                                <li class="list-group-item mazeItem" id="{{ maze.name }}">
                                                     <a href="#/Maze/{{ maze.name }}">{{ maze.name }}</a>
                                                 </li>
                                             {% endfor %}
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="panel list-group-item mazeItem" data-toggle="collapse"
+                                <li id="about_author" class="panel list-group-item mazeItem" data-toggle="collapse"
                                     data-parent="#accordion"
                                     href="#collapseThree"
                                     aria-expanded="false" aria-controls="collapseThree">
                                     <h6>
-                                        About
+                                        Author
                                     </h6>
                                     <div id="collapseThree" class="collapse" role="tabpanel"
                                          aria-labelledby="headingThree">
@@ -128,7 +132,7 @@
                     </div>
                 </div>
                 <div class="col-lg-5 p-l-0 p-r-0 fullScreen" style="display:none;">
-                    <div id="mazeDesc" class="mazeLevels card">
+                    <div id="mazeDesc" class="mazeLevels card card-outline-secondary">
 
                     </div>
                 </div>
@@ -137,7 +141,7 @@
 
         <div id="sandBox" class="col-lg-9 fullScreen">
             <div class="row landingPage">
-                <div class="col-lg-12 m-t-3 text-lg-center text-primary">
+                <div class="col-lg-12 m-t-2 text-lg-center text-primary">
 
                     <h1>
                         Welcome to Learn Security!
@@ -145,27 +149,18 @@
 
                 </div>
                 <div class="col-lg-12">
-                    <p class="text-primary" style="font-size:20px">
+                    <p class="text-primary infoText sketchText m-t-1 text-justify">
                         Purpose of this website is to teach you some computer science.
                         Topics regard linux and range of security issues in a fun maze like tutorials.
                         Each level has some short introduction to the topic, and few tasks to complete.
                         Website is designed so you can learn without registration, help or password peek is for
                         registered users though.
                     </p>
-                    {#                    <p class="text-primary landingDesc" id="login_description" style="font-size:18px">#}
-                    {#                        Login to keep track of your progress.#}
-                    {#                    </p>#}
-                    {#                    <p class="text-primary landingDesc" id="maze_description" style="font-size:18px">#}
-                    {#                        Courses (mazes) can be found here, most basic one is BasicLinux good one for a starter.#}
-                    {#                    </p>#}
-                    {#                    <p class="text-primary landingDesc" id="author_description" style="font-size:18px">#}
-                    {#                        Some words about me and this project. Just so accordion has more element I guess...#}
-                    {#                    </p>#}
-                    {#                    <p class="text-primary landingDesc" id="user_perks_description">#}
-                    {#                        After logging you can set your custom pic here, also will be greeted by name :)#}
-                    {#                    </p>#}
+
+                    <button class="btn btn-lg btn-secondary w-100 m-t-1" id="initGuide">Guide Me!</button>
                 </div>
-                <img style="position:fixed; bottom:0; right:0; opacity:0.1" src="{% static 'images/coon.png' %}">
+                <img id="coon" style="position:fixed; bottom:0; right:0; opacity:0.2; z-index:-1;"
+                     src="{% static 'images/coon.png' %}">
             </div>
         </div>
 
