@@ -6,4 +6,3 @@ LearnSecurity/static/*
 !static/images
 __*
 *.pyc
-*migration*
