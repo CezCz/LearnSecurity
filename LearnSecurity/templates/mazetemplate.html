@@ -1,13 +1,11 @@
 <div class="row">
     <div class="col-lg-9 m-t-1">
-
         <h1>
             {{ maze.name }}
         </h1>
         <h4 class="text-muted">
             Level {{ level.level }} - {{ level.short_description }}
         </h4>
-
     </div>
     <div class="col-lg-3 m-t-1">
         <h1>
@@ -41,27 +39,25 @@
                     {% if item.text %}
                         <p class="infoText">
                             {% for textItem in item.text %}
-                                {{ textItem }} <br/>
+                                {{ textItem | safe }} <br/>
                             {% endfor %}
                         </p>
                     {% endif %}
                     {% if item.list %}
                         <ul>
                             {% for li in item.list %}
-                                <li>{{ li }}</li>
+                                <li>{{ li | safe }}</li>
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <div>
-                        {% if item.svg %}
+                    {% if item.svg %}
+                        <div>
                             {{ item.svg | safe }}
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                 </div>
-
             {% endfor %}
         {% endif %}
-
         {% if level.program_description.Usage %}
             <h3> Usage </h3>
             <div class="infoSection">
