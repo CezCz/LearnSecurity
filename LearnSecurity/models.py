@@ -7,6 +7,7 @@ class Maze(models.Model):
     name = models.CharField(max_length=30)
     desc = models.CharField(max_length=30)
     difficulty = models.IntegerField()
+    how_to = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name + " Maze"
