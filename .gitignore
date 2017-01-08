@@ -1,9 +1,8 @@
 .idea
 manage.py
+LearnSecurity/static
+!LearnSecurity/static/app
+!LearnSecurity/static/app/*
 components
-LearnSecurity/static/*
-!static/app
-!static/images
-!static/app/*
 __*
 *.pyc

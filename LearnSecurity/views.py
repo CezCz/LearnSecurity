@@ -37,7 +37,8 @@ def maze_level_card_handler(request, maze_name):
 def basic_linux_handler(request, maze_name, level):
     maze = Maze.objects.get(name=maze_name)
     db_level = Level.objects.get(maze=maze, level=level)
-    db_level.program_description['Program']['sections'] = collections.OrderedDict(sorted(db_level.program_description['Program']['sections'].items()))
+    db_level.program_description['Program']['sections'] = collections.OrderedDict(
+        sorted(db_level.program_description['Program']['sections'].items()))
     steps = list(LevelStep.objects.filter(level=db_level))
     steps = sorted(steps, key=operator.attrgetter('level_step'))
 
@@ -135,7 +136,6 @@ def change_user_creds(request):
                 if unique_id != 'cat.jpg':
                     image = os.path.join(MEDIA_ROOT, unique_id)
                     os.remove(image)
-                else:
                     unique_id = get_random_string(length=64)
             except:
                 user_pic = UserPic()
@@ -182,3 +182,7 @@ def change_user_password(request):
         token = {'change_password_form': ChangePasswordForm(user=request.user)}
         token.update(csrf(request))
         return render(request, "changepassword.html", token)
+
+
+def landing_page(request):
+    return render(request, 'landingpage.html')

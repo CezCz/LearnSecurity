@@ -1,22 +1,19 @@
+{% load static %}
 <div class="row">
-    <div class="col-lg-9 m-t-1">
-        <h1>
-            {{ maze.name }}
-        </h1>
-        <h4 class="text-muted">
-            Level {{ level.level }} - {{ level.short_description }}
-        </h4>
-    </div>
-    <div class="col-lg-3 m-t-1">
-        <h1>
-            Steps
-        </h1>
-    </div>
-</div>
-<div class="row">
-
     <div class="col-lg-9">
-
+        <div class="row">
+            <div class="col-lg-7 m-t-1">
+                <h1>
+                    {{ maze.name }}
+                </h1>
+                <h4 class="text-muted">
+                    Level {{ level.level }} - {{ level.short_description }}
+                </h4>
+            </div>
+            <div class="col-lg-5 m-t-1">
+                {{ maze.how_to }}
+            </div>
+        </div>
         {% if level.program_description.Program.main %}
             {% if level.program_description.Program.header %}
                 <h3>
@@ -73,30 +70,33 @@
                 {% endfor %}
             </div>
         {% endif %}
-
         {% if level.program_description.Terminal %}
             <h3> Example </h3>
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="terminalWrapper">
+                    <div class="terminalWrapper" id="terminal"
+                         data-prompt-begin="{{ level.program_description.Terminal.prompt_begin }}"
+                         data-command="{{ level.program_description.Terminal.command }}"
+                         data-result="{{ level.program_description.Terminal.result }}"
+                         data-prompt-end="{{ level.program_description.Terminal.prompt_end }}">
                         <div class="terminalBar">
                             User: bash - Konsole
                         <span id="restartTerminal" class="pull-right" title="repeat"><i
                                 class="fa fa-repeat" aria-hidden="true"></i></span>
                         </div>
                         <div class="terminalBody">
-                            user@domain:~$ <span class="typeplace"></span>
                         </div>
                     </div>
                 </div>
             </div>
         {% endif %}
-
     </div>
-
-    <div class="col-lg-3">
-        <div id="mazeAccordion" role="tablist" class="itemList" aria-multiselectable="true">
-            <ul class="list-group list-group-flush ">
+    <div class="col-lg-3 m-t-1">
+        <h1>
+            Steps
+        </h1>
+        <div id="mazeAccordion" role="tablist" class="itemList m-t-3" aria-multiselectable="true">
+            <ul class="list-group list-group-flush">
                 {% for item in steps %}
                     <li class="panel list-group-item mazeItem" data-toggle="collapse"
                         data-parent="#mazeAccordion"
@@ -122,11 +122,15 @@
                             {% if item.description.svg %}
                                 {{ item.description.svg | safe }}
                             {% endif %}
-                            <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
-                                    data-maze-step="{{ item.level_step }}" data-type="check"
-                                    class="button btn btn-success">Check Answer
 
-                            </button>
+                            <div class='input-group m-b-1'>
+                                <span class='input-group-addon'><i class='fa fa-arrow-right text-primary'
+                                                                   aria-hidden='true'></i></span>
+                                <input class='form-control passwordInput' type='text' placeholder='Enter password'
+                                       data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
+                                       data-maze-step="{{ item.level_step }}" data-type="check">
+                            </div>
+
                             <button data-maze="{{ maze.name }}" data-maze-level="{{ level.level }}"
                                     data-maze-step="{{ item.level_step }}" data-type="help" class="button btn btn-info"
                                     {% if not user.is_authenticated %} disabled {% endif %}>
@@ -144,121 +148,3 @@
         </div>
     </div>
 </div>
-<script>
-    requirejs(['jquery', 'secApp', 'typed'],
-            function ($, secApp) {
-
-                $('body').on('click', function (e) {
-                    if ($(e.target).closest(".popover").length === 0) {
-                        $('.popover').popover('hide');
-                    }
-                });
-
-                $("div[id*='step']").on("click", function (e) {
-                    e.stopPropagation();
-                });
-
-                function getInformation() {
-                    var maze = $(this).attr("data-maze");
-                    var level = $(this).attr("data-maze-level");
-                    var step = $(this).attr("data-maze-step");
-                    return {maze: maze, level: level, step: step};
-                }
-
-
-                $("button[data-type='check']").on("click", function () {
-
-                    var answerButton = $(this);
-                    var mazeLevelStepInfo = getInformation.call(answerButton);
-                    var inputTemplate = $("<div class='input-group'><span class='input-group-addon'></span><input id='passwordInput' class='form-control' type='text'/ placeholder='Enter password'></div>");
-
-                    answerButton.on('shown.bs.popover', function () {
-                        $("#passwordInput").focus();
-                    }.bind(answerButton));
-
-                    answerButton.popover({
-                        content: inputTemplate,
-                        placement: "left",
-                        title: "Check answer",
-                        html: true
-                    });
-                    answerButton.popover('show');
-
-                    inputTemplate.on("keyup", function () {
-                        var icon = $(this).find("i");
-                        if (icon === [] || !icon.hasClass("fa-spinner")) {
-                            $(this).find("span").html("<i class='fa fa-spinner fa-spin' aria-hidden='true'></i>");
-                        }
-                    });
-
-                    inputTemplate.on("keyup", secApp.debounce(function () {
-                        var password = $(this).find("input").val();
-                        $.post("Maze/" + mazeLevelStepInfo.maze + "/" + mazeLevelStepInfo.level + "/check/" + mazeLevelStepInfo.step, {answer: password}).then(function (data) {
-                            if (data.check === true) {
-                                $(this).find("span").html("<i class='fa fa-check' aria-hidden='true'></i>");
-                                answerButton.closest("li").find(".passedTick").html('<i class="fa fa-check tada animated" aria-hidden="true"></i>');
-                            } else {
-                                $(this).find("span").html("<i class='fa fa-times' aria-hidden='true'></i>")
-                            }
-                        }.bind(this));
-                    }, 500));
-
-                });
-
-
-                $("button[data-type='help']").on("click", function () {
-                    var mazeLevelStepInfo = getInformation.call(this);
-                    $.post("Maze/" + mazeLevelStepInfo.maze + "/" + mazeLevelStepInfo.level + "/help/" + mazeLevelStepInfo.step).then(function (data) {
-                        $(this).popover({content: data.help, placement: "left", title: "Help!"});
-                        $(this).popover('show');
-                    }.bind(this));
-
-                });
-
-                $("button[data-type='peek']").on("click", function () {
-
-                    var mazeLevelStepInfo = getInformation.call(this);
-                    $.post("Maze/" + mazeLevelStepInfo.maze + "/" + mazeLevelStepInfo.level + "/peek/" + mazeLevelStepInfo.step).then(function (data) {
-                        $(this).popover({content: data.peek, placement: "left", title: "Password"});
-                        $(this).popover('show');
-                    }.bind(this));
-
-                });
-
-                {% if level.program_description.Terminal %}
-                    function triggerConsole() {
-                        if (window.previousTypedObject) {
-                            window.previousTypedObject.reset();
-                        }
-                        $('.terminalBody').html('{{ level.program_description.Terminal.prompt_begin }} <span class="typeplace"></span>');
-
-                        $(".typeplace").typed({
-                            strings: ["{{ level.program_description.Terminal.command }}"],
-                            typeSpeed: 20,
-                            startDelay: 200,
-                            callback: function () {
-                                setTimeout(function () {
-                                    var terminalBody = $(".terminalBody");
-                                    terminalBody.find(".typed-cursor").remove();
-                                    terminalBody.append("<pre class='terminalPre'>" + htmlDecode("{{ level.program_description.Terminal.result }}") + "</pre>");
-                                    terminalBody.append("<span>{{ level.program_description.Terminal.prompt_end }} <span class='typed-cursor'>|</span></span>");
-                                }, 500);
-                            }
-                        });
-
-                        window.previousTypedObject = $(".typeplace").data('typed');
-                    }
-
-                    triggerConsole();
-                    $("#restartTerminal").on('click', function () {
-                        triggerConsole();
-                    });
-                {% endif %}
-
-
-            });
-
-    function htmlDecode(value) {
-        return $('<div/>').html(value).text();
-    }
-</script>
