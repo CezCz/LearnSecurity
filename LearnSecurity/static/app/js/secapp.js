@@ -31,8 +31,6 @@ define(['jquery'], function ($) {
         }
     })();
 
-
-    //Do setup work here
     return {
         debounce: function (func, wait, immediate) {
             var timeout;

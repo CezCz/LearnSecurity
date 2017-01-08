@@ -39,6 +39,7 @@ a:hover {
 
 .icon_anchor:hover {
     color: grey;
+    cursor: pointer;
 }
 
 .sidePanel, .mazeLevels {
@@ -62,8 +63,12 @@ a:hover {
     overflow-y: auto;
 }
 
-#sandBox, #navigationBar, #mainNavigationBar, #mazeDesc {
-    transition: all 0.4s ease;
+#sandBox, #navigationBar, #mainNavigationBar {
+    transition: all 0.2s ease;
+}
+
+#mazeDesc {
+    transition: all 0.2s ease;
 }
 
 .col-0 {
@@ -76,6 +81,15 @@ a:hover {
     cursor: pointer;
     background: transparent;
 }
+
+.list-group .list-group-item a {
+    color:black;
+}
+
+.list-group .list-group-item h6:hover, .list-group .list-group-item li:hover, .list-group .list-group-item a:hover {
+    color: #0275d8;
+}
+
 
 .mazeItem ul li:last-child {
     border-bottom: 0;
@@ -164,7 +178,7 @@ a:hover {
 }
 
 .landingPage h1 {
-    font-size: 60px;
+    font-size: 4em;
 }
 
 .infoText {
@@ -247,4 +261,16 @@ svg {
     display: block;
     max-width: 100%;
     height: auto;
+}
+
+#accordion, #mazeAccordion {
+    user-select: none;
+}
+
+.coonImg {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    opacity: 0.2;
+    z-index: -1;
 }

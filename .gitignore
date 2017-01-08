@@ -4,5 +4,6 @@ components
 LearnSecurity/static/*
 !static/app
 !static/images
+!static/app/*
 __*
 *.pyc
