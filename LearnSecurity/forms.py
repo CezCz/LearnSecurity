@@ -1,10 +1,13 @@
+import sys
 from django import forms
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField, UserChangeForm, \
     SetPasswordForm, PasswordChangeForm
+from django.utils.translation import ugettext_lazy as _
+from datetime import datetime
 
-from LearnSecurity.models import UserPic
+from LearnSecurity.models import UserPic, PasswordRecoveryKey
 
 
 class RegistrationForm(UserCreationForm):
@@ -102,3 +105,59 @@ class ChangePicForm(forms.ModelForm):
     class Meta:
         model = UserPic
         fields = ('image',)
+
+
+class GetRecoveryKeyForm(forms.Form):
+    error_messages = {"not_in_system": _("Provided username or e-mail is does not exist in the system.")}
+
+    username = forms.CharField(label="Provide username or email in order to recover password.", required=True,
+                               widget=forms.TextInput(
+                                   attrs={'class': 'form-control', 'placeholder': 'John@mail.com'}))
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        try:
+            User.objects.get(email=username)
+        except User.DoesNotExist:
+            try:
+                User.objects.get(username=username)
+            except User.DoesNotExist:
+                raise forms.ValidationError(
+                    self.error_messages['not_in_system'],
+                    code='not_in_system',
+                )
+        return username
+
+
+class RecoveryForm(SetPasswordForm):
+    error_messages = {"not_valid_key": _("The key is not correct or outdated.")}
+
+    key = forms.CharField(label="Type key provided in an e-mail.", required=True,
+                          widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'PAYm33hL'}))
+
+    def __init__(self, user, *args, **kwargs):
+        super(RecoveryForm, self).__init__(user, *args, **kwargs)
+        self.fields['new_password1'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password1'].widget.attrs['placeholder'] = '******'
+        self.fields['new_password1'].required = False
+        self.fields['new_password2'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password2'].widget.attrs['placeholder'] = '******'
+        self.fields['new_password2'].required = False
+
+    def clean_key(self):
+        key = self.cleaned_data["key"]
+
+        try:
+            password_recovery_key = PasswordRecoveryKey.objects.get(random_gen=key)
+            if  password_recovery_key.valid_until < datetime.now(password_recovery_key.valid_until.tzinfo):
+                raise KeyOutdatedError()
+        except (PasswordRecoveryKey.DoesNotExist, KeyOutdatedError):
+            raise forms.ValidationError(
+                self.error_messages['not_valid_key'],
+                code='not_valid_key',
+            )
+        return key
+
+
+class KeyOutdatedError(ValueError):
+    pass

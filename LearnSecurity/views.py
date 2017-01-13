@@ -3,19 +3,23 @@ import operator
 import os
 from base64 import b64decode
 
-import re
-
 import collections
+from datetime import datetime
+
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.http import HttpResponse, JsonResponse, HttpResponseServerError
+from django.http.response import HttpResponseNotFound
 from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.utils.crypto import get_random_string
 
-from LearnSecurity.forms import RegistrationForm, LoginForm, EditUserForm, ChangePasswordForm, ChangePicForm
-from LearnSecurity.models import Maze, Level, LevelStep, UserPic, UserProgress
+from LearnSecurity.forms import RegistrationForm, LoginForm, EditUserForm, ChangePasswordForm, ChangePicForm, \
+    GetRecoveryKeyForm, RecoveryForm
+from LearnSecurity.models import Maze, Level, LevelStep, UserPic, UserProgress, PasswordRecoveryKey
+from LearnSecurity.utils import send_recovery_mail
 from LearnSecurityApp.settings import MEDIA_ROOT
 
 
@@ -186,3 +190,64 @@ def change_user_password(request):
 
 def landing_page(request):
     return render(request, 'landingpage.html')
+
+
+def get_key(request):
+    if request.method == 'POST':
+        form = GetRecoveryKeyForm(data=request.POST)
+        if form.is_valid():
+
+            isRandom = False
+            for x in range(100):
+                random_seq = get_random_string(8)
+                try:
+                    PasswordRecoveryKey.objects.get(random_gen=random_seq)
+                except PasswordRecoveryKey.DoesNotExist:
+                    isRandom = True
+                    break
+
+            if not isRandom:
+                return HttpResponseServerError(json.dumps({'username': ['Something went wrong, try again later.']}))
+
+            try:
+                user = User.objects.get(username=form.cleaned_data['username'])
+            except User.DoesNotExist:
+                user = User.objects.get(email=form.cleaned_data['username'])
+
+            try:
+                passwordRecoveryKey = PasswordRecoveryKey.objects.get(user=user)
+                if passwordRecoveryKey.valid_until < datetime.now():
+                    passwordRecoveryKey.delete()
+                    PasswordRecoveryKey(random_gen=random_seq, user=user).save()
+            except:
+                PasswordRecoveryKey(random_gen=random_seq, user=user).save()
+
+            try:
+                send_recovery_mail(random_seq, user.email)
+            except:
+                return HttpResponseServerError(json.dumps({'username': ['Something went wrong, try again later.']}))
+            return HttpResponse()
+        else:
+            return HttpResponseServerError(json.dumps(form.errors))
+    else:
+        token = {'form': GetRecoveryKeyForm(), 'recovery_form': RecoveryForm(user=None)}
+        token.update(csrf(request))
+        return render(request, 'recoverstart.html', token)
+
+
+def change_password_with_key(request):
+    if request.method == 'POST':
+        try:
+            recoveryKey = PasswordRecoveryKey.objects.get(random_gen=request.POST['key'])
+            user = recoveryKey.user
+        except PasswordRecoveryKey.DoesNotExist:
+            user = None
+        form = RecoveryForm(user=user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            recoveryKey.delete()
+            return HttpResponse()
+        else:
+            return HttpResponseServerError(json.dumps(form.errors))
+    else:
+        return HttpResponseNotFound()

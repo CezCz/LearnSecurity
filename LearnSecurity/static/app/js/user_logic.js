@@ -14,7 +14,12 @@ define(['jquery'], function ($) {
         var changePassFormHandler = function (form, url) {
             handleForm(form, url);
         };
-        displayModalForm("#editPasswordModal", "/change/password/", "#editPasswordForm", changePassFormHandler);
+        displayModalForm("#editPasswordModal", "/change/password/", {
+            "#editPasswordForm": {
+                handler: changePassFormHandler,
+                url: "/change/password/"
+            }
+        }, '#id_old_password');
     });
 
     $("#editUserTrigger").on("click", function () {
@@ -22,34 +27,66 @@ define(['jquery'], function ($) {
             handleForm(form, url);
             createCustomImageInput();
         };
-        displayModalForm("#editUserModal", "/change/credentials/", "#editUserForm", editUserFormHandler);
+        displayModalForm("#editUserModal", "/change/credentials/", {
+            "#editUserForm": {
+                handler: editUserFormHandler,
+                url: "/change/credentials/"
+            }
+        }, '#id_username');
     });
 
     $("#registerTrigger").on("click", function () {
         var registerFormHandler = function (form, url) {
             handleForm(form, url);
         };
-        displayModalForm("#registerModal", "/register/", "#registerForm", registerFormHandler);
+        displayModalForm("#registerModal", "/register/", {
+            "#registerForm": {
+                handler: registerFormHandler,
+                url: "/register/"
+            }
+        }, '#id_username');
     });
 
-    function displayModalForm(modalId, modalUrl, formId, formHandleFunction) {
+    $("#recoverTrigger").on("click", function () {
+        var getKeyFormHandler = function (form, url) {
+            handleForm(form, url);
+        };
+        var recoverFormHandler = function (form, url) {
+            handleForm(form, url);
+        };
+        displayModalForm("#recoveryModal", "/getRecovery/", {
+            "#getKeyForm": {handler: getKeyFormHandler, url: "/getRecovery/"},
+            "#recoveryForm": {handler: recoverFormHandler, url: "/restorePassword/"}
+        }, '#id_username');
+    });
+
+    function displayModalForm(modalId, modalUrl, formHandlers, focusOn) {
         var modal = $(modalId);
 
         if (modalExists()) {
             $.get(modalUrl).then(function (data) {
                 var modal = $(data).modal();
                 modal.on('shown.bs.modal', function () {
-                    var form = $(formId);
-                    $('#id_username').focus();
+                    for (var formId in formHandlers) {
+                        if (formHandlers.hasOwnProperty(formId)) {
+                            var form = $(formId);
 
-                    if ($._data(form.get(0), "events") === undefined) {
-                        formHandleFunction(form, modalUrl);
+                            if ($._data(form.get(0), "events") === undefined) {
+                                formHandlers[formId].handler(form, formHandlers[formId].url);
+                            }
+                        }
                     }
+                    $(focusOn).focus();
                 });
                 modal.on('hidden.bs.modal', function () {
-                    var form = $(formId);
-                    getSubmitButton(form).attr('class', 'btn btn-secondary');
-                    removeIconFromSubmitButton(form);
+                    for (var formId in formHandlers) {
+                        if (formHandlers.hasOwnProperty(formId)) {
+                            var form = $(formId);
+
+                            getSubmitButton(form).attr('class', 'btn btn-secondary');
+                            removeIconFromSubmitButton(form);
+                        }
+                    }
                 });
             });
         } else {
@@ -147,7 +184,7 @@ define(['jquery'], function ($) {
     }
 
     function getSubmitButton(form) {
-        return form.find("[data-type=submit]");
+        return form.find("[data-type=submit]").exists() ? form.find("[data-type=submit]") : form.parent().siblings(".modal-footer").find("[data-type=submit]");
     }
 
     function addSpinnerToSubmitButton(form) {
@@ -195,7 +232,6 @@ define(['jquery'], function ($) {
 
             var inputs = clearFormFeedback(form);
             var values = extractInputValues(inputs);
-            console.log(values);
 
             addSpinnerToSubmitButton(form);
             $.post(postUrl, values).always(function () {

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from datetime import datetime
+from datetime import timedelta
 
 
 class Maze(models.Model):
@@ -49,3 +51,13 @@ class UserProgress(models.Model):
 class UserPic(models.Model):
     user = models.OneToOneField(User)
     image = models.ImageField(default='/cat.jpg')
+
+
+class PasswordRecoveryKey(models.Model):
+    user = models.ForeignKey(User)
+    random_gen = models.CharField(max_length=8)
+    valid_until = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        self.valid_until = datetime.now() + timedelta(minutes = 10)
+        return super(PasswordRecoveryKey, self).save(*args, **kwargs)
