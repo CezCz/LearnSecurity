@@ -21,7 +21,6 @@ class Level(models.Model):
     # password = models.CharField(max_length=64)
     # password_next = models.CharField(max_length=64)
     short_description = models.CharField(max_length=200)
-    program_description = JSONField()
 
     def __str__(self):
         return str(self.maze) + ", Level: " + str(self.level)
@@ -30,7 +29,6 @@ class Level(models.Model):
 class LevelStep(models.Model):
     level = models.ForeignKey(Level)
     level_step = models.IntegerField()
-    description = JSONField(default="")
     help = models.CharField(max_length=200)
     answer = models.CharField(max_length=200)
     password = models.CharField(max_length=200)

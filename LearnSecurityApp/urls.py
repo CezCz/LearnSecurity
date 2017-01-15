@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^$', views.index),
     url(r'^LandingPage/', views.landing_page),
     url(r'^Maze/(?P<maze_name>[a-zA-Z0-9]+)$', views.maze_level_card_handler),
-    url(r'^Maze/(?P<maze_name>[a-zA-Z0-9]+)/(?P<level>[0-9][0-9]?)$', views.basic_linux_handler),
+    url(r'^Maze/(?P<maze_name>[a-zA-Z0-9]+)/(?P<level>[0-9][0-9]?)$', views.maze_specific_level_content_handler),
     url(r'^Maze/(?P<maze_name>[a-zA-Z0-9]+)/(?P<level>[0-9][0-9]?)/help/(?P<step>[0-9])$', views.level_step_help),
     url(r'^Maze/(?P<maze_name>[a-zA-Z0-9]+)/(?P<level>[0-9][0-9]?)/check/(?P<step>[0-9])$',
         views.level_step_check_password),

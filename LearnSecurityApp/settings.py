@@ -140,8 +140,8 @@ STATICFILES_FINDERS = [
 # TODO
 # FIXTURE_DIRS = ""
 
-BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, '/components/')
-STATIC_ROOT = os.path.join(BASE_DIR, 'LearnSecurityApp/LearnSecurity/static')
+BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'LearnSecurity/static')
 
 BOWER_INSTALLED_APPS = (
     'jquery',

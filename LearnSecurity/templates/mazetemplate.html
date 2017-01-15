@@ -14,19 +14,19 @@
                 {{ maze.how_to }}
             </div>
         </div>
-        {% if level.program_description.Program.main %}
-            {% if level.program_description.Program.header %}
+        {% if program_description.Program.main %}
+            {% if program_description.Program.header %}
                 <h3>
-                    {{ level.program_description.Program.header }}
+                    {{ program_description.Program.header }}
                 </h3>
             {% endif %}
             <div class="infoSection">
-                <p class="infoText"> {{ level.program_description.Program.main }}</p>
+                <p class="infoText"> {{ program_description.Program.main }}</p>
             </div>
         {% endif %}
 
-        {% if level.program_description.Program.sections %}
-            {% for key, item in level.program_description.Program.sections.items %}
+        {% if program_description.Program.sections %}
+            {% for key, item in program_description.Program.sections.items %}
                 <div class="infoSection">
                     {% if item.header %}
                         <h5>
@@ -55,10 +55,10 @@
                 </div>
             {% endfor %}
         {% endif %}
-        {% if level.program_description.Usage %}
+        {% if program_description.Usage %}
             <h3> Usage </h3>
             <div class="infoSection">
-                {% for key, element in level.program_description.Usage.items %}
+                {% for key, element in program_description.Usage.items %}
                     <div class="row commandExColumn">
                         <div class="col-lg-5 commandExample">
                             {{ key }}
@@ -70,15 +70,15 @@
                 {% endfor %}
             </div>
         {% endif %}
-        {% if level.program_description.Terminal %}
+        {% if program_description.Terminal %}
             <h3> Example </h3>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="terminalWrapper" id="terminal"
-                         data-prompt-begin="{{ level.program_description.Terminal.prompt_begin }}"
-                         data-command="{{ level.program_description.Terminal.command }}"
-                         data-result="{{ level.program_description.Terminal.result }}"
-                         data-prompt-end="{{ level.program_description.Terminal.prompt_end }}">
+                         data-prompt-begin="{{ program_description.Terminal.prompt_begin }}"
+                         data-command="{{ program_description.Terminal.command }}"
+                         data-result="{{ program_description.Terminal.result }}"
+                         data-prompt-end="{{ program_description.Terminal.prompt_end }}">
                         <div class="terminalBar">
                             User: bash - Konsole
                         <span id="restartTerminal" class="pull-right" title="repeat"><i

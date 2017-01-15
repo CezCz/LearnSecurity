@@ -5,6 +5,7 @@ from base64 import b64decode
 
 import collections
 from datetime import datetime
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -20,7 +21,8 @@ from LearnSecurity.forms import RegistrationForm, LoginForm, EditUserForm, Chang
     GetRecoveryKeyForm, RecoveryForm
 from LearnSecurity.models import Maze, Level, LevelStep, UserPic, UserProgress, PasswordRecoveryKey
 from LearnSecurity.utils import send_recovery_mail
-from LearnSecurityApp.settings import MEDIA_ROOT
+from LearnSecurityApp import settings
+from LearnSecurityApp.settings import MEDIA_ROOT, BASE_DIR
 
 
 def index(request):
@@ -38,11 +40,9 @@ def maze_level_card_handler(request, maze_name):
     return render(request, "mazelevelcards.html", {"maze": maze, "levels": levels})
 
 
-def basic_linux_handler(request, maze_name, level):
+def maze_specific_level_content_handler(request, maze_name, level):
     maze = Maze.objects.get(name=maze_name)
     db_level = Level.objects.get(maze=maze, level=level)
-    db_level.program_description['Program']['sections'] = collections.OrderedDict(
-        sorted(db_level.program_description['Program']['sections'].items()))
     steps = list(LevelStep.objects.filter(level=db_level))
     steps = sorted(steps, key=operator.attrgetter('level_step'))
 
@@ -52,8 +52,27 @@ def basic_linux_handler(request, maze_name, level):
         passed_level_steps = [passed['level_step'] for passed in
                               LevelStep.objects.filter(userprogress__in=passed_steps).values('level_step')]
 
+        specific_maze_content = os.path.join(settings.STATIC_ROOT, 'static_templates/maze_templates/', maze_name,
+                                             os.extsep.join((level, 'json')))
+
+        steps_context = []
+        for step in steps:
+            maze_step_content = os.path.join(settings.STATIC_ROOT, 'static_templates/step_templates/', maze_name, level,
+                                             '.'.join((str(step.level_step), 'json')))
+            with open(maze_step_content) as data_file:
+                step_info = {}
+                step_info['level_step'] = step.level_step
+                step_info['description'] = json.load(data_file)
+                steps_context.append(step_info)
+
+        with open(specific_maze_content) as data_file:
+            program_description = json.load(data_file)
+            program_description['Program']['sections'] = collections.OrderedDict(
+                sorted(program_description['Program']['sections'].items()))
+
     return render(request, "mazetemplate.html",
-                  {"maze": maze, "level": db_level, "steps": steps, "passed_steps": passed_level_steps})
+                  {"maze": maze, "level": db_level, "steps": steps_context, "passed_steps": passed_level_steps,
+                   "program_description": program_description})
 
 
 @login_required
