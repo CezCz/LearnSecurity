@@ -130,7 +130,8 @@ class GetRecoveryKeyForm(forms.Form):
 
 
 class RecoveryForm(SetPasswordForm):
-    error_messages = {"not_valid_key": _("The key is not correct or outdated.")}
+    error_messages = {"not_valid_key": _("The key is not correct or outdated."),
+                      'password_mismatch': _("The two password fields didn't match.")}
 
     key = forms.CharField(label="Type key provided in an e-mail.", required=True,
                           widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'PAYm33hL'}))
@@ -149,7 +150,7 @@ class RecoveryForm(SetPasswordForm):
 
         try:
             password_recovery_key = PasswordRecoveryKey.objects.get(random_gen=key)
-            if  password_recovery_key.valid_until < datetime.now(password_recovery_key.valid_until.tzinfo):
+            if password_recovery_key.valid_until < datetime.now(password_recovery_key.valid_until.tzinfo):
                 raise KeyOutdatedError()
         except (PasswordRecoveryKey.DoesNotExist, KeyOutdatedError):
             raise forms.ValidationError(
