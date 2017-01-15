@@ -55,20 +55,18 @@ def maze_specific_level_content_handler(request, maze_name, level):
         specific_maze_content = os.path.join(settings.STATIC_ROOT, 'static_templates/maze_templates/', maze_name,
                                              os.extsep.join((level, 'json')))
 
-        steps_context = []
-        for step in steps:
-            maze_step_content = os.path.join(settings.STATIC_ROOT, 'static_templates/step_templates/', maze_name, level,
-                                             '.'.join((str(step.level_step), 'json')))
-            with open(maze_step_content) as data_file:
-                step_info = {}
-                step_info['level_step'] = step.level_step
-                step_info['description'] = json.load(data_file)
-                steps_context.append(step_info)
+    steps_context = []
+    for step in steps:
+        maze_step_content = os.path.join(settings.STATIC_ROOT, 'static_templates/step_templates/', maze_name, level,
+                                         '.'.join((str(step.level_step), 'json')))
+        with open(maze_step_content) as data_file:
+            step_info = {'level_step': step.level_step, 'description': json.load(data_file)}
+            steps_context.append(step_info)
 
-        with open(specific_maze_content) as data_file:
-            program_description = json.load(data_file)
-            program_description['Program']['sections'] = collections.OrderedDict(
-                sorted(program_description['Program']['sections'].items()))
+    with open(specific_maze_content) as data_file:
+        program_description = json.load(data_file)
+        program_description['Program']['sections'] = collections.OrderedDict(
+            sorted(program_description['Program']['sections'].items()))
 
     return render(request, "mazetemplate.html",
                   {"maze": maze, "level": db_level, "steps": steps_context, "passed_steps": passed_level_steps,
