@@ -5,7 +5,6 @@ from base64 import b64decode
 
 import collections
 from datetime import datetime
-from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -52,8 +51,8 @@ def maze_specific_level_content_handler(request, maze_name, level):
         passed_level_steps = [passed['level_step'] for passed in
                               LevelStep.objects.filter(userprogress__in=passed_steps).values('level_step')]
 
-        specific_maze_content = os.path.join(settings.STATIC_ROOT, 'static_templates/maze_templates/', maze_name,
-                                             os.extsep.join((level, 'json')))
+    specific_maze_content = os.path.join(settings.STATIC_ROOT, 'static_templates/maze_templates/', maze_name,
+                                         os.extsep.join((level, 'json')))
 
     steps_context = []
     for step in steps:
@@ -135,7 +134,7 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            UserPic(image="images/cat.jpg", user=user).save()
+            UserPic(image="cat.jpg", user=user).save()
             return HttpResponse()
         else:
             return HttpResponseServerError(json.dumps(form.errors))
