@@ -8,7 +8,7 @@ requirejs(['jquery', 'secApp', "navigo_init", 'bootstrap', 'user_logic'], functi
     if (mazeListState !== null) {
         $("#navigationBar, #mainNavigationBar, #sandBox, #mazeDesc").css({transition: "all 0.01s"});
         showSpecificMazeLevelList(mazeListState);
-        $("#navigationBar, #mainNavigationBar, #sandBox").removeAttr("style");
+        $("#navigationBar, #mainNavigationBar, #sandBox, #mazeDesc").removeAttr("style");
     }
 
     $.fn.exists = function () {
@@ -36,6 +36,7 @@ requirejs(['jquery', 'secApp', "navigo_init", 'bootstrap', 'user_logic'], functi
                     $("#sandBox").toggleClass("col-lg-8 col-lg-9");
 
                     navbar.on('transitionend webkitTransitionEnd oTransitionEnd', function () {
+                        // this is never happening normally on telephones as there is no transition needed!!
                         mazeDescDiv.parent().show();
                         mazeDescDiv.addClass("animated fadeInLeft");
                         navbar.off('transitionend webkitTransitionEnd oTransitionEnd');

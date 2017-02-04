@@ -40,9 +40,9 @@ define(['jquery', 'presentate'], function ($, presentate) {
 
                     }, {
                         parentElement: login,
-                        descElement: "<p class='text-primary infoText text-justify'>Login form, plain and simple. Register button can be found here :). </p>",
+                        descElement: "<p class='text-primary infoText sketchText bubbleText text-justify'>Login form, plain and simple. Register button can be found here :). </p>",
                         mobile: {
-                            offset: "-100px 0",
+                            offset: "200px 0",
                             attachment: "middle center",
                             targetAttachment: "middle center",
                             click: clickOnCollapseIfNotShown
@@ -54,7 +54,7 @@ define(['jquery', 'presentate'], function ($, presentate) {
 
                     }, {
                         parentElement: logout,
-                        descElement: "<p class='text-primary infoText text-justify'>Well, this is self-explanatory.</p>",
+                        descElement: "<p class='text-primary infoText sketchText bubbleText text-justify'>Well, this is self-explanatory.</p>",
                         mobile: {
                             offset: "-100px 0",
                             attachment: "middle center",
@@ -67,7 +67,7 @@ define(['jquery', 'presentate'], function ($, presentate) {
                         }
                     }, {
                         parentElement: author,
-                        descElement: "<p class='text-primary infoText text-justify'>If you like my work, please let me know.</p>",
+                        descElement: "<p class='text-primary infoText sketchText bubbleText text-justify'>If you like my work, please let me know.</p>",
                         mobile: {
                             offset: "-100px 0",
                             attachment: "middle center",
@@ -80,7 +80,7 @@ define(['jquery', 'presentate'], function ($, presentate) {
                         }
                     }, {
                         parentElement: maze,
-                        descElement: "<p class='text-primary infoText text-justify'>All mazes are listed here. <br/> Clicking on one will cause an additional list of maze steps. <br/> Every consists of some interesting topic with excercises. <br/> Let's see whats under BasicLinux <br/> This is last step in this presentation, good luck! </p>",
+                        descElement: "<p class='text-primary infoText sketchText bubbleText text-justify'>All mazes are listed here. <br/> Clicking on one will cause an additional list of maze steps. <br/> Every consists of some interesting topic with excercises. <br/> Let's see whats under BasicLinux <br/> This is last step in this presentation, good luck! </p>",
                         mobile: {
                             offset: "-150px 0",
                             attachment: "middle center",
