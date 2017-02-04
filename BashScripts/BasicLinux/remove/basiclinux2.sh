@@ -4,5 +4,5 @@ echo "Removing, Step 2, Deleting sl program from filesystem"
 
 if command -v foo >/dev/null 2>&1
 then
-  apt-get remove sl
+  sudo apt-get remove sl
 fi

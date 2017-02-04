@@ -29,8 +29,8 @@ if [ "$1" == create ] || [ "$1" == remove ]; then
   all=$(ls -l ${DIR}/$1/basiclinux?*.sh | wc -l)
 
   if [ $2 == all ]; then
-    for file in basiclinux`seq 1 $all`.sh; do
-      ${DIR}/$1/$file
+    for file in `seq 1 $all`; do
+      ${DIR}/$1/basiclinux$file.sh
       echo .
     done
 
